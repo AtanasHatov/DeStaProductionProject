@@ -1,0 +1,12 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model Location
+
+<h2>Delete Location</h2>
+
+<p>Are you sure you want to delete <strong>@Model.Name</strong>?</p>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

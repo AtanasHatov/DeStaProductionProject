@@ -1,0 +1,31 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model IEnumerable<Location>
+
+<h2>Locations</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-2">Create Location</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Capacity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var location in Model)
+        {
+            <tr>
+                <td>@location.Name</td>
+                <td>@location.City</td>
+                <td>@location.Capacity</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@location.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@location.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
