@@ -1,0 +1,27 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model Event
+
+<h2>@Model.Title</h2>
+
+<p><strong>Type:</strong> @Model.Type.Name</p>
+<p><strong>Description:</strong> @Model.Description</p>
+<p><strong>Duration:</strong> @Model.Duration min</p>
+
+<h4>Performances</h4>
+
+@if (Model.Performances.Any())
+{
+    <ul>
+        @foreach (var p in Model.Performances)
+        {
+            <li>@p.Title – @p.Date.ToString("dd.MM.yyyy HH:mm")</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No performances yet.</p>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Back</a>
+

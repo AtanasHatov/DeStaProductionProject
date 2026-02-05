@@ -1,0 +1,31 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model Event
+
+<h2>Create Event</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Duration"></label>
+        <input asp-for="Duration" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Event Type</label>
+        <select asp-items=@ViewBag.EventTypes asp-for="@Model.EventType" class="form-control">
+            <option disabled selected>Select a breed</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+

@@ -1,0 +1,34 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model IEnumerable<Event>
+
+<h2>Events</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-2">Create Event</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Duration (min)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.Title</td>
+                <td>@e.Type.Name</td>
+                <td>@e.Duration</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@e.Id">Details</a> |
+                    <form asp-action="Delete" asp-route-id="@e.Id" method="post" style="display:inline">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
