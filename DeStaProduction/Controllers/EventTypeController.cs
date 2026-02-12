@@ -1,4 +1,5 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
+using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,15 @@ namespace DeStaProduction.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var eventTypes = await context.EventTypes.ToListAsync();
+            var eventTypes = await context.EventTypes
+                .Select(x=> new EventTypeViewModel
+                {
+                    Id=x.Id,
+                    Name=x.Name,
+                    Events=x.Events
+
+                })
+                .ToListAsync();
             return View(eventTypes);
         }
 
@@ -28,28 +37,41 @@ namespace DeStaProduction.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(EventType model)
+        public async Task<IActionResult> Create(EventTypeViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            context.EventTypes.Add(model);
+            var evtp = new EventType 
+            {
+                Id = Guid.NewGuid(),
+                Name = model.Name,
+                Events = model.Events
+            };
+
+
+            await context.EventTypes.AddAsync(evtp);
             await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> Delete(Guid id)
         {
-            var eventType = await context.EventTypes.FindAsync(id);
+            EventType eventType = await context.EventTypes.FindAsync(id);
 
             if (eventType == null)
             {
                 return NotFound();
             }
-
-            return View(eventType);
+            EventTypeViewModel eventTypeViewModel = new EventTypeViewModel
+            {
+                Id = eventType.Id,
+                Name = eventType.Name,
+                Events = eventType.Events
+            };
+            return View(eventTypeViewModel);
         }
         [HttpPost]
         [ActionName("Delete")]

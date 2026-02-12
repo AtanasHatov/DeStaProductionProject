@@ -1,4 +1,5 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
+using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,19 @@ namespace DeStaProduction.Controllers
             var performances = await context.Performances
                 .Include(p => p.Event)
                 .Include(p => p.Location)
+                .Select(x=>new PerformanceViewModel
+                {
+                    Id=x.Id,
+                    Description=x.Description,
+                    Event=x.Event,
+                    EventId=x.EventId,
+                    Location=x.Location,
+                    Date=x.Date,
+                    LocationId=x.LocationId,
+                    Participants=x.Participants,
+                    Schedules=x.Schedules,
+                    Title=x.Title
+                })
                 .ToListAsync();
 
             return View(performances);
@@ -40,9 +54,22 @@ namespace DeStaProduction.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create(Performance model)
+        public async Task<IActionResult> Create(PerformanceViewModel model)
         {
-            context.Performances.Add(model);
+            var perf = new Performance
+            {
+                Id = Guid.NewGuid(),
+                Description = model.Description,
+                Event = model.Event,
+                EventId = model.EventId,
+                Location = model.Location,
+                Date = model.Date,  
+                LocationId = model.LocationId,
+                Participants = model.Participants,
+                Schedules = model.Schedules,
+                Title = model.Title
+            };
+            await context.Performances.AddAsync(perf);
             await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
