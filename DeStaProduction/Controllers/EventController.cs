@@ -1,4 +1,5 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
+using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,17 @@ namespace DeStaProduction.Controllers
         public async Task<IActionResult> Index()
         {
             var events = await context.Events
-                .Include(e => e.Type)
+                .Include(e => e.Type).Select(x=> new EventViewModel
+                {
+                    EventType = x.EventType,
+                    Description = x.Description,
+                    Duration = x.Duration,
+                    Id=x.Id,
+                    Performances = x.Performances,
+                    Title = x.Title,
+                    Type = x.Type,
+                    Users = x.Users
+                })
                 .ToListAsync();
 
             return View(events);
@@ -27,12 +38,25 @@ namespace DeStaProduction.Controllers
         {
             var types = await context.EventTypes.ToListAsync();
             ViewBag.EventTypes = new SelectList(types, "Id", "Name");
-            return View();
+            return View(new EventViewModel());
         }
         [HttpPost]
-        public async Task<IActionResult> Create(Event model)
+        public async Task<IActionResult> Create(EventViewModel model)
         {
-            context.Events.Add(model);
+
+            var events = new Event 
+            {
+                EventType = model.EventType,
+                Description = model.Description,
+                Duration = model.Duration,
+                Id = Guid.NewGuid(),
+                Performances = model.Performances,
+                Title = model.Title,
+                Type = model.Type,
+                Users = model.Users
+            };
+
+            await  context.Events.AddAsync(events);
             await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -42,7 +66,20 @@ namespace DeStaProduction.Controllers
             var ev = await context.Events
                 .Include(e => e.Type)
                 .Include(e => e.Performances)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .Where(e => e.Id == id)
+                .Select(x => new EventViewModel 
+                {
+                    EventType = x.EventType,
+                    Description = x.Description,
+                    Duration = x.Duration,
+                    Id = x.Id,
+                    Performances = x.Performances,
+                    Title = x.Title,
+                    Type = x.Type,
+                    Users = x.Users
+                })
+                .FirstOrDefaultAsync();
+
 
             if (ev == null)
             {
@@ -55,11 +92,14 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Guid Id)
         {
-            var ev = await context.Events.FirstOrDefaultAsync(a => a.Id == Id);
+            var ev = await context.Events.Where(a => a.Id == Id)
+                .FirstOrDefaultAsync();
+
             if (ev == null)
             {
                 return NotFound();
             }
+
             context.Events.Remove(ev);
             await context.SaveChangesAsync();
 

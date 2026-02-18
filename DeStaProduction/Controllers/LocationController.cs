@@ -1,4 +1,5 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
+using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,17 @@ namespace DeStaProduction.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var locations = await context.Locations.ToListAsync();
+            var locations = await context.Locations
+                .Select(x=>new LocationViewModel 
+                { 
+                    Id=x.Id,
+                    Address=x.Address,
+                    Capacity=x.Capacity,
+                    City=x.City,
+                    Name=x.Name,
+                    Events=x.Events
+                })
+                .ToListAsync();
             return View(locations);
         }
         public IActionResult Create()
@@ -24,14 +35,20 @@ namespace DeStaProduction.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Location model)
+        public async Task<IActionResult> Create(LocationViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
 
-            context.Locations.Add(model);
+            var loc = new Location
+            {
+                Id = Guid.NewGuid(),
+                Address = model.Address,
+                Capacity = model.Capacity,
+                City = model.City,
+                Name = model.Name,
+                Events = model.Events
+            };
+
+            await context.Locations.AddAsync(loc);
             await context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -39,25 +56,39 @@ namespace DeStaProduction.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
             var location = await context.Locations
-                .FirstOrDefaultAsync(l => l.Id == id);
+                .Where(l => l.Id == id)
+                .Select(x=>new LocationViewModel
+                {
+                    Id=x.Id,
+                    Address = x.Address,
+                    Capacity = x.Capacity,
+                    City = x.City,
+                    Name = x.Name,
+                    Events = x.Events
+                })
+                .FirstOrDefaultAsync();
 
-            if (location == null)
-            {
-                return NotFound();
-            }
+         
 
             return View(location);
         }
         public async Task<IActionResult> Delete(Guid id)
         {
-            var location = await context.Locations.FindAsync(id);
+            Location location = await context.Locations.FindAsync(id);
 
             if (location == null)
             {
                 return NotFound();
             }
-
-            return View(location);
+            LocationViewModel locationViewModel = new LocationViewModel
+            {
+                Address = location.Address,
+                Capacity = location.Capacity,
+                City = location.City,
+                Name = location.Name,
+                Events = location.Events
+            };
+            return View(locationViewModel);
         }
         [HttpPost]
         [ActionName("Delete")]
