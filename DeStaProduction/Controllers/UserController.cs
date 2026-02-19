@@ -1,19 +1,22 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
 using DeStaProduction.ViewModels.UserViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeStaProduction.Controllers
 {
+    [AllowAnonymous]
     public class UserController : Controller
     {
         private readonly UserManager<DeStaUser> userManager;
         private readonly SignInManager<DeStaUser> signInManager;
-
-        public UserController(UserManager<DeStaUser> _userManager, SignInManager<DeStaUser> _signInManager)
+        private readonly RoleManager<IdentityRole<Guid>> roleManager;
+        public UserController(UserManager<DeStaUser> _userManager, SignInManager<DeStaUser> _signInManager, RoleManager<IdentityRole<Guid>> _roleManager)
         {
             userManager = _userManager;
             signInManager = _signInManager;
+            roleManager=_roleManager;
         }
 
         [HttpGet]
@@ -46,6 +49,10 @@ namespace DeStaProduction.Controllers
             var result = await userManager.CreateAsync(user, model.ConfirmPassword);
             if (result.Succeeded)
             {
+                if(model.Role=="Artist" || model.Role == "User")
+                {
+                    await userManager.AddToRoleAsync(user, model.Role);
+                }
                 return RedirectToAction("Login", "User");
             }
             foreach(var item in result.Errors)
@@ -74,6 +81,12 @@ namespace DeStaProduction.Controllers
                 return View(model);
             }
             var user = await userManager.FindByNameAsync(model.Email);
+            if (!user.IsApproved)
+            {
+                ModelState.AddModelError("", "Your account is awaiting administrator approval.");
+                return View(model);
+            }
+
             if (user != null)
             {
                 var result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
@@ -91,6 +104,20 @@ namespace DeStaProduction.Controllers
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> SeedRoldes()
+        {
+            string[] roles = { "Admin", "Artist", "User" };
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+                }
+            }
+            return Content("Roles seeded (created if missing).");
         }
     }
 }

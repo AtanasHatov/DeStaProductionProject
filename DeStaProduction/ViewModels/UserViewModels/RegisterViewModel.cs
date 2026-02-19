@@ -26,5 +26,9 @@ namespace DeStaProduction.ViewModels.UserViewModels
         [StringLength(20, MinimumLength = 5)]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; } = null!;
+
+        [Required]
+        public string Role {  get; set; }
+        public bool IsApproved { get; set; } = false;
     }
 }

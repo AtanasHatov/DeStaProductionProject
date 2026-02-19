@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DeStaProduction.Infrastucture.Entities;
+using Microsoft.AspNetCore.Identity;
+using DeStaProduction.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,7 @@ builder.Services.AddDefaultIdentity<DeStaUser>(options =>
     options.SignIn.RequireConfirmedAccount = false  ;
     options.Password.RequiredLength = 5;
 })
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -24,6 +27,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<DeStaUser>>();
+    await IdentitySeeder.SeedRoldesAsync(roleManager,userManager);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

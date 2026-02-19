@@ -1,11 +1,13 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
 using DeStaProduction.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeStaProduction.Controllers
 {
+    [Authorize]
     public class PerformanceController : Controller
     {
         private readonly ApplicationDbContext context;
@@ -37,6 +39,7 @@ namespace DeStaProduction.Controllers
 
             return View(performances);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Events = new SelectList(
@@ -53,6 +56,7 @@ namespace DeStaProduction.Controllers
 
             return View();
         }
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(PerformanceViewModel model)
         {

@@ -22,5 +22,8 @@ namespace DeStaProduction.Infrastucture.Entities
         public ICollection<Event>? Events { get; set; }
 
         public ICollection<Schedule>? Schedules { get; set; }
+
+        public bool IsApproved { get; set; } = false;
+
     }
 }
