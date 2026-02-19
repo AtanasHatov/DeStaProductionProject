@@ -1,11 +1,12 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
 using DeStaProduction.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeStaProduction.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class LocationController : Controller
     {
         private readonly ApplicationDbContext context;

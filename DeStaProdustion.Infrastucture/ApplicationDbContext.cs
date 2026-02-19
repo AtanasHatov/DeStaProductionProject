@@ -12,11 +12,6 @@ namespace DeStaProduction.Infrastucture.Entities
 
         }
 
-        public ApplicationDbContext()
-        {
-            
-        }
-
         public DbSet<Event> Events { get; set; } 
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<Location> Locations { get; set; } 

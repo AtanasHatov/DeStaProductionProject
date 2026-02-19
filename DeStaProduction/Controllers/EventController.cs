@@ -1,13 +1,15 @@
 ﻿using DeStaProduction.Infrastucture.Entities;
 using DeStaProduction.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace DeStaProduction.Controllers
 {
-    //[Authorize(Roles = "Admin")]
     //„Event описва какво е събитието.Кога и къде се случва се описва в Performance, за да може един Event да има много изпълнения.“
+    [Authorize(Roles = "Admin")]
     public class EventController : Controller
     {
         private readonly ApplicationDbContext context;
@@ -16,6 +18,7 @@ namespace DeStaProduction.Controllers
         {
             this.context = context;
         }
+
         public async Task<IActionResult> Index()
         {
             var events = await context.Events

@@ -3,10 +3,11 @@ using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace DeStaProduction.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class EventTypeController : Controller
     {
         private readonly ApplicationDbContext context;

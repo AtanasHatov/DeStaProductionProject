@@ -1,0 +1,24 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model IEnumerable<DeStaUser>
+
+<h2>Pending Users</h2>
+
+<table class="table">
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.UserName</td>
+            <td>@u.Email</td>
+            <td>
+                <form asp-action="Approve" method="post">
+                    <input type="hidden" name="userId" value="@u.Id" />
+                    <select name="role">
+                        <option value="Artist">Artist</option>
+                        <option value="User">User</option>
+                    </select>
+                    <button class="btn btn-success">Approve</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

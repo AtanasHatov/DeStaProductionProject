@@ -2,9 +2,10 @@
 @model IEnumerable<PerformanceViewModel>
 
 <h2>Performances</h2>
-
-<a asp-action="Create" class="btn btn-primary mb-2">Add Performance</a>
-
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-primary mb-2">Add Performance</a>
+}
 <table class="table table-bordered">
     <thead>
         <tr>
