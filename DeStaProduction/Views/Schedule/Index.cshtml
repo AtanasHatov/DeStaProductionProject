@@ -1,0 +1,66 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model IEnumerable<Schedule>
+
+<h2>Schedule</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-primary mb-3">Create Schedule</a>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Performance</th>
+            <th>Artist</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@s.Performance.Title</td>
+                <td>@s.User.UserName</td>
+
+                <td>
+                    @if (s.IsAvailable)
+                    {
+                        <span class="badge bg-success">Available</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Busy</span>
+                    }
+                </td>
+
+                <td>@s.Notes</td>
+
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-warning">Edit</a>
+
+                        <form asp-action="Delete" asp-route-id="@s.Id"
+                              method="post" style="display:inline">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    }
+
+                    @if (User.IsInRole("Artist") && s.UserId == Guid.Parse(User.FindFirst("sub")!.Value))
+                    {
+                        <a asp-action="Availability"
+                           asp-route-id="@s.Id"
+                           class="btn btn-sm btn-info">
+                            Availability
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

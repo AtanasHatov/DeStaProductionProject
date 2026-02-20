@@ -1,0 +1,36 @@
+﻿@using DeStaProduction.Infrastucture.Entities
+@model Schedule
+
+<h2>Create Schedule</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label>Date</label>
+        <input asp-for="Date" type="datetime-local" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Performance</label>
+        <select asp-for="PerformanceId" asp-items="ViewBag.Performances" class="form-control"></select>
+    </div>
+
+    <div class="mb-3">
+        <label>Artist</label>
+        <select asp-for="UserId" asp-items="ViewBag.Artists" class="form-control"></select>
+    </div>
+
+    <div class="mb-3">
+        <label>Artist Availability</label>
+        <select asp-for="IsAvailable" class="form-control">
+            <option value="true">Available</option>
+            <option value="false">Busy</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Notes</label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success">Save</button>
+</form>
