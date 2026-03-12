@@ -52,6 +52,11 @@ namespace DeStaProduction.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Schedule model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var performance = await context.Performances
                             .Include(p => p.Event)
                             .FirstOrDefaultAsync(p => p.Id == model.PerformanceId);
@@ -114,6 +119,11 @@ namespace DeStaProduction.Controllers
         [Authorize(Roles = "Artist")]
         public async Task<IActionResult> Availability(Guid id, bool isAvailable, string notes)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var user = await userManager.GetUserAsync(User);
 
             var schedule = await context.Schedules
@@ -134,6 +144,11 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var schedule = await context.Schedules.FindAsync(id);
             if (schedule == null)
                 return NotFound();

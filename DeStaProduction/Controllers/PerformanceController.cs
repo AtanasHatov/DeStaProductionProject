@@ -26,9 +26,9 @@ namespace DeStaProduction.Controllers
                 {
                     Id=x.Id,
                     Description=x.Description,
-                    Event=x.Event,
+                    Event=x.Event.Title,
                     EventId=x.EventId,
-                    Location=x.Location,
+                    Location=x.Location.Name,
                     Date=x.Date,
                     LocationId=x.LocationId,
                     Participants=x.Participants,
@@ -60,13 +60,27 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(PerformanceViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Events = new SelectList(
+                await context.Events.ToListAsync(),
+                "Id",
+                "Title"
+            );
+
+                ViewBag.Locations = new SelectList(
+                    await context.Locations.ToListAsync(),
+                    "Id",
+                    "Name"
+                );
+                return View();
+            }
+
             var perf = new Performance
             {
                 Id = Guid.NewGuid(),
                 Description = model.Description,
-                Event = model.Event,
                 EventId = model.EventId,
-                Location = model.Location,
                 Date = model.Date,  
                 LocationId = model.LocationId,
                 Participants = model.Participants,
@@ -81,6 +95,22 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Events = new SelectList(
+                await context.Events.ToListAsync(),
+                "Id",
+                "Title"
+            );
+
+                ViewBag.Locations = new SelectList(
+                    await context.Locations.ToListAsync(),
+                    "Id",
+                    "Name"
+                );
+                return View();
+            }
+
             var performance = await context.Performances.FirstOrDefaultAsync(p => p.Id == id);
 
             if (performance == null)

@@ -38,6 +38,10 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(LocationViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
 
             var loc = new Location
             {
@@ -95,6 +99,11 @@ namespace DeStaProduction.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             var location = await context.Locations.FindAsync(id);
 
             if (location != null)

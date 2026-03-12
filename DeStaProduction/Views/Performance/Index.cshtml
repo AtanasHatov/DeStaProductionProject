@@ -21,8 +21,8 @@
         {
             <tr>
                 <td>@p.Title</td>
-                <td>@p.Event?.Title</td>
-                <td>@p.Location.Name</td>
+                <td>@p.Event</td>
+                <td>@p.Location</td>
                 <td>@p.Date.ToString("dd.MM.yyyy HH:mm")</td>
                 <td>
                     <form asp-action="Delete" asp-route-id="@p.Id" method="post" style="display:inline">

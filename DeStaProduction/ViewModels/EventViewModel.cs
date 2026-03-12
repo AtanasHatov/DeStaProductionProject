@@ -13,8 +13,7 @@ namespace DeStaProduction.ViewModels
         [ForeignKey(nameof(Type))]
         public Guid EventType { get; set; }
 
-        public EventType Type { get; set; } = null!;
-
+        public string? TypeName { get; set; }
         public List<DeStaUser>? Users { get; set; }
         [Range(1, 1440)]
         public int Duration { get; set; }
