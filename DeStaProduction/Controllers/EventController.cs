@@ -30,8 +30,8 @@ namespace DeStaProduction.Controllers
                     Id=x.Id,
                     Performances = x.Performances,
                     Title = x.Title,
-                    Type = x.Type,
-                    Users = x.Users
+                    Users = x.Users,
+                    TypeName = x.Type.Name
                 })
                 .ToListAsync();
 
@@ -46,6 +46,12 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EventViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                var types = await context.EventTypes.ToListAsync();
+                ViewBag.EventTypes = new SelectList(types, "Id", "Name");
+                return View();
+            }
 
             var events = new Event 
             {
@@ -55,7 +61,6 @@ namespace DeStaProduction.Controllers
                 Id = Guid.NewGuid(),
                 Performances = model.Performances,
                 Title = model.Title,
-                Type = model.Type,
                 Users = model.Users
             };
 
@@ -78,8 +83,8 @@ namespace DeStaProduction.Controllers
                     Id = x.Id,
                     Performances = x.Performances,
                     Title = x.Title,
-                    Type = x.Type,
-                    Users = x.Users
+                    Users = x.Users,
+                    TypeName = x.Type.Name
                 })
                 .FirstOrDefaultAsync();
 
@@ -95,6 +100,13 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Guid Id)
         {
+            if (!ModelState.IsValid)
+            {
+                var types = await context.EventTypes.ToListAsync();
+                ViewBag.EventTypes = new SelectList(types, "Id", "Name");
+                return View();
+            }
+
             var ev = await context.Events.Where(a => a.Id == Id)
                 .FirstOrDefaultAsync();
 

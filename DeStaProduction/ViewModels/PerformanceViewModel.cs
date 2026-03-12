@@ -20,14 +20,13 @@ namespace DeStaProduction.ViewModels
         [ForeignKey(nameof(Location))]
         public Guid LocationId { get; set; }
 
-        public Location Location { get; set; } = null!;
+        public string? Location { get; set; }
 
         public DateTime Date { get; set; }
 
         [ForeignKey(nameof(Event))]
         public Guid EventId { get; set; }
-
-        public Event? Event { get; set; }
+        public string? Event { get; set; }
 
         public ICollection<DeStaUser> Participants { get; set; } = new List<DeStaUser>();
         public ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();

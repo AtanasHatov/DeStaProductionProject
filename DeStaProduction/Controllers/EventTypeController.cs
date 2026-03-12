@@ -78,6 +78,10 @@ namespace DeStaProduction.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
             var eventType = await context.EventTypes.FindAsync(id);
 
             if (eventType != null)
