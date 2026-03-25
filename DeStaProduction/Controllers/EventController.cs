@@ -74,6 +74,7 @@ namespace DeStaProduction.Controllers
             var ev = await context.Events
                 .Include(e => e.Type)
                 .Include(e => e.Performances)
+                .ThenInclude(p => p.Location)
                 .Where(e => e.Id == id)
                 .Select(x => new EventViewModel 
                 {

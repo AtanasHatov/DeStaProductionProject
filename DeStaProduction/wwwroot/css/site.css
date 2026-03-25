@@ -20,3 +20,34 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.day {
+    border: 1px solid #ddd;
+    padding: 8px;
+    min-height: 120px;
+    border-radius: 10px;
+    background: #f9f9f9;
+}
+
+.day-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.event-card {
+    padding: 4px;
+    border-radius: 6px;
+    margin-top: 4px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+    .event-card:hover {
+        opacity: 0.8;
+    }

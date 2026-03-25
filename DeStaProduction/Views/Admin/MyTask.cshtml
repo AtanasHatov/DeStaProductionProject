@@ -1,9 +1,19 @@
 ﻿@model DeStaProduction.Infrastucture.Entities.Schedule
+@{
+    var performances = ViewBag.Performances;
+}
 
 <h2>My Task</h2>
 
 <form method="post">
     <input asp-for="Date" type="datetime-local" class="form-control mb-2" />
+
+    <select asp-for="PerformanceId" class="form-control mb-2">
+        @foreach (var performance in performances)
+        {
+            <option value="@performance.Value">@performance.Text</option>
+        }
+    </select>
 
     <textarea asp-for="Notes" class="form-control mb-2"></textarea>
 

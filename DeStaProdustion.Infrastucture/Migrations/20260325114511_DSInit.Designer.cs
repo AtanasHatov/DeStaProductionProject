@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260325084721_DSInit")]
+    [Migration("20260325114511_DSInit")]
     partial class DSInit
     {
         /// <inheritdoc />
@@ -222,7 +222,7 @@ namespace DeStaProduction.Infrastucture.Migrations
 
             modelBuilder.Entity("DeStaProduction.Infrastucture.Entities.Schedule", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 

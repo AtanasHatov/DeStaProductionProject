@@ -124,23 +124,43 @@ namespace DeStaProduction.Controllers
             return Content("Roles seeded (created if missing).");
 
         }
+
         [HttpPost]
         [Authorize(Roles = "Artist")]
-        public async Task<IActionResult> Availability(Guid id, bool isAvailable, string notes)
+        public async Task<IActionResult> Availability(DateTime date, bool isAvailable)
         {
-            var userId = Guid.Parse(User.FindFirst("sub")!.Value);
+            var user = await userManager.GetUserAsync(User);
 
-            var schedule = await dbContext.Schedules
-                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+            var existing = await dbContext.Schedules.FirstOrDefaultAsync(s =>
+                s.UserId == user.Id &&
+                s.Date.Date == date.Date &&
+                s.Type == "Availability"
+            );
 
-            if (schedule == null) return Unauthorized();
-
-            schedule.IsAvailable = isAvailable;
-            schedule.Notes = notes;
+            if (existing != null)
+            {
+                existing.IsAvailable = isAvailable;
+            }
+            else
+            {
+                dbContext.Schedules.Add(new Schedule
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    Date = date,
+                    Type = "Availability",
+                    IsAvailable = isAvailable,
+                    IsPublic = false
+                });
+            }
 
             await dbContext.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Schedule", new
+            {
+                month = date.Month,
+                year = date.Year
+            });
         }
     }
-    }
+}

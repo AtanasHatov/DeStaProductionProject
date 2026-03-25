@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace DeStaProduction.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<DeStaUser> userManager;
@@ -18,11 +18,19 @@ namespace DeStaProduction.Controllers
             this.context = context;
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var users = userManager.Users.ToList();
-            return View(users);
+
+            var model = new List<(DeStaUser user, IList<string> roles)>();
+
+            foreach (var user in users)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                model.Add((user, roles));
+            }
+
+            return View(model);
         }
 
         public IActionResult PendingUsers()
@@ -50,68 +58,85 @@ namespace DeStaProduction.Controllers
             return RedirectToAction(nameof(PendingUsers));
         }
 
-        [Authorize(Roles = "Admin")]
-        public IActionResult AddPerformance()
+        public async Task<IActionResult> AssignTask()
         {
-            ViewBag.Performances = new SelectList(context.Performances, "Id", "Title");
-            ViewBag.Actors = new SelectList(context.Users, "Id", "UserName");
+            var users = context.Users.ToList();
+            var artists = new List<DeStaUser>();
 
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddPerformance(Guid performanceId, List<Guid> actorIds)
-        {
-            var performance = await context.Performances.FindAsync(performanceId);
-
-            foreach (var actorId in actorIds)
+            foreach (var user in users)
             {
-                context.Schedules.Add(new Schedule
+                if (await userManager.IsInRoleAsync(user, "Artist"))
                 {
-                    UserId = actorId,
-                    PerformanceId = performanceId,
-                    Date = performance.Date,
-                    Type = "Performance",
-                    IsPublic = true
-                });
+                    artists.Add(user);
+                }
             }
 
-            await context.SaveChangesAsync();
+            ViewBag.Actors = new SelectList(artists, "Id", "UserName");
+            ViewBag.Performances = new SelectList(context.Performances, "Id", "Title");
 
-            return RedirectToAction("Index");
-        }
-
-        [Authorize(Roles = "Admin")]
-        public IActionResult AssignTask()
-        {
-            ViewBag.Actors = new SelectList(context.Users, "Id", "UserName");
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignTask(Schedule model)
         {
-            model.IsPublic = false;
+            if (model.UserId == Guid.Empty)
+            {
+                ModelState.AddModelError("", "Избери потребител");
+                return View(model);
+            }
+
+            model.IsPublic = model.Type == "Performance";
+
+            var availability = context.Schedules.FirstOrDefault(s =>
+                s.UserId == model.UserId &&
+                s.Date.Date == model.Date.Date &&
+                s.Type == "Availability"
+            );
+
+            if (availability != null && !availability.IsAvailable)
+            {
+                ModelState.AddModelError("", "Актьорът НЕ е свободен на тази дата!");
+
+                var users = context.Users.ToList();
+                var artists = new List<DeStaUser>();
+
+                foreach (var user in users)
+                {
+                    if (await userManager.IsInRoleAsync(user, "Artist"))
+                    {
+                        artists.Add(user);
+                    }
+                }
+
+                ViewBag.Actors = new SelectList(artists, "Id", "UserName");
+                ViewBag.Performances = new SelectList(context.Performances, "Id", "Title");
+
+                return View(model);
+            }
 
             context.Schedules.Add(model);
             await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Schedule", new
+            {
+                month = model.Date.Month,
+                year = model.Date.Year
+            });
         }
 
-        [Authorize(Roles = "Admin")]
         public IActionResult MyTask()
         {
+            ViewBag.Performances = new SelectList(context.Performances, "Id", "Title");
+
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> MyTask(Schedule model)
         {
-            var userId = Guid.Parse(User.FindFirst("sub")!.Value);
+            var user = await userManager.GetUserAsync(User);
+            var userId = user.Id;
 
             model.UserId = userId;
             model.Type = "Personal";
@@ -120,7 +145,11 @@ namespace DeStaProduction.Controllers
             context.Schedules.Add(model);
             await context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Schedule", new
+            {
+                month = model.Date.Month,
+                year = model.Date.Year
+            });
         }
     }
 }

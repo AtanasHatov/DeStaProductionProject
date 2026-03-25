@@ -1,23 +1,9 @@
-﻿@model IEnumerable<DeStaProduction.Infrastucture.Entities.DeStaUser>
+﻿@model List<(DeStaUser user, IList<string> roles)>
 
-<h2>All Users</h2>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Approved</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var u in Model)
-        {
-            <tr>
-                <td>@u.UserName</td>
-                <td>@u.Email</td>
-                <td>@u.IsApproved</td>
-            </tr>
-        }
-    </tbody>
-</table>
+@foreach (var u in Model)
+{
+    <tr>
+        <td>@u.user.UserName</td>
+        <td>@string.Join(", ", u.roles)</td>
+    </tr>
+}
