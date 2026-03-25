@@ -3,6 +3,7 @@ using DeStaProduction.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeStaProduction.Controllers
 {
@@ -12,11 +13,14 @@ namespace DeStaProduction.Controllers
         private readonly UserManager<DeStaUser> userManager;
         private readonly SignInManager<DeStaUser> signInManager;
         private readonly RoleManager<IdentityRole<Guid>> roleManager;
-        public UserController(UserManager<DeStaUser> _userManager, SignInManager<DeStaUser> _signInManager, RoleManager<IdentityRole<Guid>> _roleManager)
+        private readonly ApplicationDbContext dbContext;
+        public UserController(UserManager<DeStaUser> _userManager, SignInManager<DeStaUser> _signInManager,
+            RoleManager<IdentityRole<Guid>> _roleManager, ApplicationDbContext dbContext)
         {
             userManager = _userManager;
             signInManager = _signInManager;
-            roleManager=_roleManager;
+            roleManager = _roleManager;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
@@ -118,6 +122,25 @@ namespace DeStaProduction.Controllers
                 }
             }
             return Content("Roles seeded (created if missing).");
+
+        }
+        [HttpPost]
+        [Authorize(Roles = "Artist")]
+        public async Task<IActionResult> Availability(Guid id, bool isAvailable, string notes)
+        {
+            var userId = Guid.Parse(User.FindFirst("sub")!.Value);
+
+            var schedule = await dbContext.Schedules
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (schedule == null) return Unauthorized();
+
+            schedule.IsAvailable = isAvailable;
+            schedule.Notes = notes;
+
+            await dbContext.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
     }
-}
+    }

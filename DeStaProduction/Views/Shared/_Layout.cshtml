@@ -27,25 +27,20 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="EventType" asp-action="Index">Event Type</a>
                             </li>
-                        }
-                        @if (User.IsInRole("Admin"))
-                        {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Location" asp-action="Index">Location</a>
                             </li>
-                        }
-                        @if (User.IsInRole("Admin"))
-                        {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Index">Event</a>
                             </li>
-                        }
-                        @if (User.IsInRole("Admin"))
-                        {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="PendingUsers">Pending Users</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                            </li>
                         }
+
                         @if (User.IsInRole("Admin") || User.IsInRole("Artist"))
                         {
                             <li class="nav-item">

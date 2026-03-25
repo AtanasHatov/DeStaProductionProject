@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class DSInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,7 @@ namespace DeStaProduction.Infrastucture.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Biography = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -289,11 +290,13 @@ namespace DeStaProduction.Infrastucture.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PerformanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PerformanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -308,7 +311,8 @@ namespace DeStaProduction.Infrastucture.Migrations
                         name: "FK_Schedules_Performances_PerformanceId",
                         column: x => x.PerformanceId,
                         principalTable: "Performances",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260117161602_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260325084721_DSInit")]
+    partial class DSInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,6 +57,9 @@ namespace DeStaProduction.Infrastucture.Migrations
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -229,13 +232,19 @@ namespace DeStaProduction.Infrastucture.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<Guid?>("PerformanceId")
+                    b.Property<Guid>("PerformanceId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -448,7 +457,9 @@ namespace DeStaProduction.Infrastucture.Migrations
                 {
                     b.HasOne("DeStaProduction.Infrastucture.Entities.Performance", "Performance")
                         .WithMany("Schedules")
-                        .HasForeignKey("PerformanceId");
+                        .HasForeignKey("PerformanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DeStaProduction.Infrastucture.Entities.DeStaUser", "User")
                         .WithMany("Schedules")

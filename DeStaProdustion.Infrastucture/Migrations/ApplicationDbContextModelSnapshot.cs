@@ -229,13 +229,19 @@ namespace DeStaProduction.Infrastucture.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<Guid?>("PerformanceId")
+                    b.Property<Guid>("PerformanceId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -448,7 +454,9 @@ namespace DeStaProduction.Infrastucture.Migrations
                 {
                     b.HasOne("DeStaProduction.Infrastucture.Entities.Performance", "Performance")
                         .WithMany("Schedules")
-                        .HasForeignKey("PerformanceId");
+                        .HasForeignKey("PerformanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DeStaProduction.Infrastucture.Entities.DeStaUser", "User")
                         .WithMany("Schedules")

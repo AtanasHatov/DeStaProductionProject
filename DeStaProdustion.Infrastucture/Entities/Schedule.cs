@@ -15,23 +15,23 @@ namespace DeStaProduction.Infrastucture.Entities
         public Guid Id { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
-
-        [Required]
-        public bool IsAvailable { get; set; }
-
-        [Required]
-        [MaxLength(500)]
-        public string Notes { get; set; } = null!;
-
-        [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }
-
         public DeStaUser User { get; set; } = null!;
 
-		[ForeignKey(nameof(Performance))]
-		public Guid? PerformanceId { get; set; }
+        [Required]
+        public Guid PerformanceId { get; set; }
+        public Performance Performance { get; set; } = null!;
 
-		public Performance? Performance { get; set; }
-	}
+        [Required]
+        public DateTime Date { get; set; }
+
+        public bool IsAvailable { get; set; } = true;
+
+        [MaxLength(500)]
+        public string? Notes { get; set; }
+
+        public string Type { get; set; } = null!;
+
+        public bool IsPublic { get; set; }
+    }
 }

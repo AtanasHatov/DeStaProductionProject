@@ -20,14 +20,43 @@ namespace DeStaProduction.Controllers
                 this.userManager = userManager;
             }
 
-        [Authorize(Roles = "Admin,Artist")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? month, int? year)
         {
-            var schedules = await context.Schedules
-                .Include(s => s.User)          
-                .Include(s => s.Performance)   
-                .ThenInclude(p => p.Event)
+            var now = DateTime.Now;
+
+            int m = month ?? now.Month;
+            int y = year ?? now.Year;
+
+            if (m > 12) { m = 1; y++; }
+            if (m < 1) { m = 12; y--; }
+
+            var user = await userManager.GetUserAsync(User);
+            var userId = user.Id;
+
+            var query = context.Schedules
+                .Include(s => s.User)
+                .Include(s => s.Performance)
+                    .ThenInclude(p => p.Event)
+                .AsQueryable();
+
+         
+            if (User.IsInRole("Artist"))
+            {
+                query = query.Where(s => s.UserId == userId);
+            }
+
+          
+            if (User.IsInRole("User"))
+            {
+                query = query.Where(s => s.IsPublic);
+            }
+
+            var schedules = await query
+                .Where(s => s.Date.Month == m && s.Date.Year == y)
                 .ToListAsync();
+
+            ViewBag.Month = m;
+            ViewBag.Year = y;
 
             return View(schedules);
         }

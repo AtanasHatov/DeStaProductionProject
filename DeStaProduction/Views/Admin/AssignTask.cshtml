@@ -1,0 +1,18 @@
+﻿@model DeStaProduction.Infrastucture.Entities.Schedule
+
+<h2>Task to Actor</h2>
+
+<form method="post">
+    <input asp-for="Date" type="datetime-local" class="form-control mb-2" />
+
+    <select asp-for="UserId" asp-items="ViewBag.Actors" class="form-control mb-2"></select>
+
+    <select asp-for="Type" class="form-control mb-2">
+        <option>Rehearsal</option>
+        <option>Setup</option>
+    </select>
+
+    <textarea asp-for="Notes" class="form-control mb-2"></textarea>
+
+    <button class="btn btn-warning">Save</button>
+</form>
