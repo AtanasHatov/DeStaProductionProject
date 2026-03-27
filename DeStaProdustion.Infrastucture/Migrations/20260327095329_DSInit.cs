@@ -291,11 +291,11 @@ namespace DeStaProduction.Infrastucture.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PerformanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PerformanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -311,8 +311,7 @@ namespace DeStaProduction.Infrastucture.Migrations
                         name: "FK_Schedules_Performances_PerformanceId",
                         column: x => x.PerformanceId,
                         principalTable: "Performances",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

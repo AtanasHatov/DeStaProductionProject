@@ -1,128 +1,58 @@
-﻿using DeStaProduction.Infrastucture.Entities;
+﻿using DeStaProduction.Core.Contracts;
+using DeStaProduction.Core.DTOs;
 using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
-namespace DeStaProduction.Controllers
+[Authorize]
+public class PerformanceController : Controller
 {
-    [Authorize]
-    public class PerformanceController : Controller
+    private readonly IPerformanceService performanceService;
+
+    public PerformanceController(IPerformanceService _performanceService)
     {
-        private readonly ApplicationDbContext context;
+        performanceService = _performanceService;
+    }
 
-        public PerformanceController(ApplicationDbContext context)
+    public async Task<IActionResult> Index()
+    {
+        var data = await performanceService.GetAllAsync();
+
+        var model = data.Select(x => new PerformanceViewModel
         {
-            this.context = context;
-        }
+            Id = x.Id,
+            Title = x.Title,
+            Event = x.Event,
+            Location = x.Location,
+            Date = x.Date
+        });
 
-        public async Task<IActionResult> Index()
+        return View(model);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult Create() => View();
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Create(PerformanceViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        await performanceService.AddAsync(new PerformanceDto
         {
-            var performances = await context.Performances
-                .Include(p => p.Event)
-                .Include(p => p.Location)
-                .Select(x=>new PerformanceViewModel
-                {
-                    Id=x.Id,
-                    Description=x.Description,
-                    Event=x.Event.Title,
-                    EventId=x.EventId,
-                    Location=x.Location.Name,
-                    Date=x.Date,
-                    LocationId=x.LocationId,
-                    Participants=x.Participants,
-                    Schedules=x.Schedules,
-                    Title=x.Title
-                })
-                .ToListAsync();
+            Title = model.Title,
+            Date = model.Date
+        });
 
-            return View(performances);
-        }
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create()
-        {
-            ViewBag.Events = new SelectList(
-                await context.Events.ToListAsync(),
-                "Id",
-                "Title"
-            );
+        return RedirectToAction(nameof(Index));
+    }
 
-            ViewBag.Locations = new SelectList(
-                await context.Locations.ToListAsync(),
-                "Id",
-                "Name"
-            );
-
-            return View();
-        }
-        [Authorize(Roles ="Admin")]
-        [HttpPost]
-        public async Task<IActionResult> Create(PerformanceViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Events = new SelectList(
-                await context.Events.ToListAsync(),
-                "Id",
-                "Title"
-            );
-
-                ViewBag.Locations = new SelectList(
-                    await context.Locations.ToListAsync(),
-                    "Id",
-                    "Name"
-                );
-                return View();
-            }
-
-            var perf = new Performance
-            {
-                Id = Guid.NewGuid(),
-                Description = model.Description,
-                EventId = model.EventId,
-                Date = model.Date,  
-                LocationId = model.LocationId,
-                Participants = model.Participants,
-                Schedules = model.Schedules,
-                Title = model.Title
-            };
-            await context.Performances.AddAsync(perf);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-        [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Events = new SelectList(
-                await context.Events.ToListAsync(),
-                "Id",
-                "Title"
-            );
-
-                ViewBag.Locations = new SelectList(
-                    await context.Locations.ToListAsync(),
-                    "Id",
-                    "Name"
-                );
-                return View();
-            }
-
-            var performance = await context.Performances.FirstOrDefaultAsync(p => p.Id == id);
-
-            if (performance == null)
-            {
-                return NotFound();
-            }
-
-            context.Performances.Remove(performance);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-
+    [HttpPost]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await performanceService.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }

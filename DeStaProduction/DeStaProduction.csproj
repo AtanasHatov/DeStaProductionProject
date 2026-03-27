@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DeStaProduction.Core\DeStaProduction.Core.csproj" />
     <ProjectReference Include="..\DeStaProdustion.Infrastucture\DeStaProduction.Infrastucture.csproj" />
   </ItemGroup>
 

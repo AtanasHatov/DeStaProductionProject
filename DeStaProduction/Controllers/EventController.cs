@@ -9,117 +9,65 @@ using System.Data;
 namespace DeStaProduction.Controllers
 {
     //„Event описва какво е събитието.Кога и къде се случва се описва в Performance, за да може един Event да има много изпълнения.“
+    using DeStaProduction.Core.Contracts;
+    using DeStaProduction.Core.DTOs;
+    using DeStaProduction.ViewModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
     [Authorize(Roles = "Admin")]
     public class EventController : Controller
     {
-        private readonly ApplicationDbContext context;
+        private readonly IEventService eventService;
 
-        public EventController(ApplicationDbContext context)
+        public EventController(IEventService _eventService)
         {
-            this.context = context;
+            eventService = _eventService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var events = await context.Events
-                .Include(e => e.Type).Select(x=> new EventViewModel
-                {
-                    EventType = x.EventType,
-                    Description = x.Description,
-                    Duration = x.Duration,
-                    Id=x.Id,
-                    Performances = x.Performances,
-                    Title = x.Title,
-                    Users = x.Users,
-                    TypeName = x.Type.Name
-                })
-                .ToListAsync();
+            var events = await eventService.GetAllAsync();
 
-            return View(events);
+            var model = events.Select(e => new EventViewModel
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Description = e.Description,
+                Duration = e.Duration,
+                TypeName = e.TypeName
+            });
+
+            return View(model);
         }
-        public async Task<IActionResult> Create()
+
+        public IActionResult Create()
         {
-            var types = await context.EventTypes.ToListAsync();
-            ViewBag.EventTypes = new SelectList(types, "Id", "Name");
-            return View(new EventViewModel());
+            return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(EventViewModel model)
         {
             if (!ModelState.IsValid)
-            {
-                var types = await context.EventTypes.ToListAsync();
-                ViewBag.EventTypes = new SelectList(types, "Id", "Name");
-                return View();
-            }
+                return View(model);
 
-            var events = new Event 
+            await eventService.AddAsync(new AddEventDto
             {
-                EventType = model.EventType,
+                Title = model.Title,
                 Description = model.Description,
                 Duration = model.Duration,
-                Id = Guid.NewGuid(),
-                Performances = model.Performances,
-                Title = model.Title,
-                Users = model.Users
-            };
-
-            await  context.Events.AddAsync(events);
-            await context.SaveChangesAsync();
+                EventTypeId = model.EventType
+            });
 
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var ev = await context.Events
-                .Include(e => e.Type)
-                .Include(e => e.Performances)
-                .ThenInclude(p => p.Location)
-                .Where(e => e.Id == id)
-                .Select(x => new EventViewModel 
-                {
-                    EventType = x.EventType,
-                    Description = x.Description,
-                    Duration = x.Duration,
-                    Id = x.Id,
-                    Performances = x.Performances,
-                    Title = x.Title,
-                    Users = x.Users,
-                    TypeName = x.Type.Name
-                })
-                .FirstOrDefaultAsync();
-
-
-            if (ev == null)
-            {
-                return NotFound();
-            }
-
-            return View(ev);
-        }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid Id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            if (!ModelState.IsValid)
-            {
-                var types = await context.EventTypes.ToListAsync();
-                ViewBag.EventTypes = new SelectList(types, "Id", "Name");
-                return View();
-            }
-
-            var ev = await context.Events.Where(a => a.Id == Id)
-                .FirstOrDefaultAsync();
-
-            if (ev == null)
-            {
-                return NotFound();
-            }
-
-            context.Events.Remove(ev);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
+            await eventService.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

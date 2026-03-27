@@ -21,7 +21,7 @@ body {
   margin-bottom: 60px;
 }
 
-.calendar-grid {
+/*.calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
@@ -50,4 +50,94 @@ body {
 
     .event-card:hover {
         opacity: 0.8;
+    }*/
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+}
+
+.day-header {
+    text-align: center;
+    font-weight: 600;
+    color: #555;
+}
+
+.day {
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
+    min-height: 150px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: 0.2s;
+    position: relative;
+}
+
+    .day:hover {
+        transform: translateY(-3px);
     }
+
+.day-number {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.today {
+    border: 2px solid #0d6efd;
+}
+
+.event-card {
+    padding: 6px;
+    border-radius: 8px;
+    margin-top: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .event-card:hover {
+        transform: scale(1.03);
+    }
+
+.bg-performance {
+    background: linear-gradient(135deg, #0d6efd, #3a8bff);
+    color: white;
+}
+
+.bg-rehearsal {
+    background: #ffc107;
+}
+
+.bg-setup {
+    background: #6c757d;
+    color: white;
+}
+
+.bg-personal {
+    background: #212529;
+    color: white;
+}
+
+.availability-box {
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 6px;
+}
+
+.free {
+    background: #d4edda;
+}
+
+.busy {
+    background: #f8d7da;
+}
+
+.unknown {
+    background: #eee;
+}
+
+.modal-content {
+    border-radius: 16px;
+}

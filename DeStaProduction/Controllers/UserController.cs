@@ -1,4 +1,5 @@
-﻿using DeStaProduction.Infrastucture.Entities;
+﻿using DeStaProduction.Core.Contracts;
+using DeStaProduction.Infrastucture.Entities;
 using DeStaProduction.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,12 +15,13 @@ namespace DeStaProduction.Controllers
         private readonly SignInManager<DeStaUser> signInManager;
         private readonly RoleManager<IdentityRole<Guid>> roleManager;
         private readonly ApplicationDbContext dbContext;
-        public UserController(UserManager<DeStaUser> _userManager, SignInManager<DeStaUser> _signInManager,
-            RoleManager<IdentityRole<Guid>> _roleManager, ApplicationDbContext dbContext)
+        private readonly IScheduleService scheduleService;
+        public UserController(UserManager<DeStaUser> _userManager,SignInManager<DeStaUser> _signInManager,RoleManager<IdentityRole<Guid>> _roleManager,ApplicationDbContext dbContext,IScheduleService scheduleService)
         {
             userManager = _userManager;
             signInManager = _signInManager;
             roleManager = _roleManager;
+            this.scheduleService = scheduleService; 
             this.dbContext = dbContext;
         }
 
@@ -131,30 +133,7 @@ namespace DeStaProduction.Controllers
         {
             var user = await userManager.GetUserAsync(User);
 
-            var existing = await dbContext.Schedules.FirstOrDefaultAsync(s =>
-                s.UserId == user.Id &&
-                s.Date.Date == date.Date &&
-                s.Type == "Availability"
-            );
-
-            if (existing != null)
-            {
-                existing.IsAvailable = isAvailable;
-            }
-            else
-            {
-                dbContext.Schedules.Add(new Schedule
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = user.Id,
-                    Date = date,
-                    Type = "Availability",
-                    IsAvailable = isAvailable,
-                    IsPublic = false
-                });
-            }
-
-            await dbContext.SaveChangesAsync();
+            await scheduleService.SetAvailability(user.Id, date, isAvailable);
 
             return RedirectToAction("Index", "Schedule", new
             {

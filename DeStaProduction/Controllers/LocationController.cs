@@ -1,119 +1,59 @@
-﻿using DeStaProduction.Infrastucture.Entities;
+﻿using DeStaProduction.Core.Contracts;
+using DeStaProduction.Core.DTOs;
 using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DeStaProduction.Controllers
 {
+  
+
     [Authorize(Roles = "Admin")]
     public class LocationController : Controller
     {
-        private readonly ApplicationDbContext context;
+        private readonly ILocationService locationService;
 
-        public LocationController(ApplicationDbContext context)
+        public LocationController(ILocationService _locationService)
         {
-            this.context = context;
+            locationService = _locationService;
         }
+
         public async Task<IActionResult> Index()
         {
-            var locations = await context.Locations
-                .Select(x=>new LocationViewModel 
-                { 
-                    Id=x.Id,
-                    Address=x.Address,
-                    Capacity=x.Capacity,
-                    City=x.City,
-                    Name=x.Name,
-                    Events=x.Events
-                })
-                .ToListAsync();
-            return View(locations);
+            var data = await locationService.GetAllAsync();
+
+            var model = data.Select(x => new LocationViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                City = x.City
+            });
+
+            return View(model);
         }
-        public IActionResult Create()
-        {
-            return View();
-        }
+
+        public IActionResult Create() => View();
 
         [HttpPost]
         public async Task<IActionResult> Create(LocationViewModel model)
         {
             if (!ModelState.IsValid)
-            {
-                return View();
-            }
+                return View(model);
 
-            var loc = new Location
+            await locationService.AddAsync(new LocationDto
             {
-                Id = Guid.NewGuid(),
-                Address = model.Address,
-                Capacity = model.Capacity,
-                City = model.City,
                 Name = model.Name,
-                Events = model.Events
-            };
-
-            await context.Locations.AddAsync(loc);
-            await context.SaveChangesAsync();
+                City = model.City
+            });
 
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var location = await context.Locations
-                .Where(l => l.Id == id)
-                .Select(x=>new LocationViewModel
-                {
-                    Id=x.Id,
-                    Address = x.Address,
-                    Capacity = x.Capacity,
-                    City = x.City,
-                    Name = x.Name,
-                    Events = x.Events
-                })
-                .FirstOrDefaultAsync();
 
-         
-
-            return View(location);
-        }
+        [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
-            Location location = await context.Locations.FindAsync(id);
-
-            if (location == null)
-            {
-                return NotFound();
-            }
-            LocationViewModel locationViewModel = new LocationViewModel
-            {
-                Address = location.Address,
-                Capacity = location.Capacity,
-                City = location.City,
-                Name = location.Name,
-                Events = location.Events
-            };
-            return View(locationViewModel);
-        }
-        [HttpPost]
-        [ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-            var location = await context.Locations.FindAsync(id);
-
-            if (location != null)
-            {
-                context.Locations.Remove(location);
-                await context.SaveChangesAsync();
-            }
-
+            await locationService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

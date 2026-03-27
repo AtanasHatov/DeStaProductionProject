@@ -1,4 +1,5 @@
-﻿using DeStaProduction.Infrastucture.Entities;
+﻿using DeStaProduction.Core.Contracts;
+using DeStaProduction.Infrastucture.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,16 @@ namespace DeStaProduction.Controllers
     {
         private readonly UserManager<DeStaUser> userManager;
         private readonly ApplicationDbContext context;
+        private readonly IScheduleService scheduleService;
 
-        public AdminController(UserManager<DeStaUser> userManager, ApplicationDbContext context)
+        public AdminController(
+            UserManager<DeStaUser> userManager,
+            ApplicationDbContext context,
+            IScheduleService scheduleService)
         {
             this.userManager = userManager;
             this.context = context;
+            this.scheduleService = scheduleService;
         }
 
         public async Task<IActionResult> Index()
@@ -80,43 +86,15 @@ namespace DeStaProduction.Controllers
         [HttpPost]
         public async Task<IActionResult> AssignTask(Schedule model)
         {
-            if (model.UserId == Guid.Empty)
+            if (!await scheduleService.IsUserAvailable(model.UserId, model.Date))
             {
-                ModelState.AddModelError("", "Избери потребител");
+                ModelState.AddModelError("", "Актьорът НЕ е свободен!");
                 return View(model);
             }
 
             model.IsPublic = model.Type == "Performance";
 
-            var availability = context.Schedules.FirstOrDefault(s =>
-                s.UserId == model.UserId &&
-                s.Date.Date == model.Date.Date &&
-                s.Type == "Availability"
-            );
-
-            if (availability != null && !availability.IsAvailable)
-            {
-                ModelState.AddModelError("", "Актьорът НЕ е свободен на тази дата!");
-
-                var users = context.Users.ToList();
-                var artists = new List<DeStaUser>();
-
-                foreach (var user in users)
-                {
-                    if (await userManager.IsInRoleAsync(user, "Artist"))
-                    {
-                        artists.Add(user);
-                    }
-                }
-
-                ViewBag.Actors = new SelectList(artists, "Id", "UserName");
-                ViewBag.Performances = new SelectList(context.Performances, "Id", "Title");
-
-                return View(model);
-            }
-
-            context.Schedules.Add(model);
-            await context.SaveChangesAsync();
+            await scheduleService.AddTaskAsync(model);
 
             return RedirectToAction("Index", "Schedule", new
             {

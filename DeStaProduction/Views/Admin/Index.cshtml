@@ -1,9 +1,97 @@
-﻿@model List<(DeStaUser user, IList<string> roles)>
+﻿@using DeStaProduction.Infrastucture.Entities
+@model List<(DeStaUser user, IList<string> roles)>
 
-@foreach (var u in Model)
-{
-    <tr>
-        <td>@u.user.UserName</td>
-        <td>@string.Join(", ", u.roles)</td>
-    </tr>
-}
+<style>
+    .user-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+    }
+
+    .user-card {
+        background: white;
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: 0.2s;
+    }
+
+        .user-card:hover {
+            transform: translateY(-4px);
+        }
+
+    .user-name {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .admin {
+        background: #212529;
+        color: white;
+    }
+
+    .artist {
+        background: #ffc107;
+    }
+
+    .user {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .status {
+        margin-top: 8px;
+        font-size: 12px;
+    }
+
+    .approved {
+        color: green;
+    }
+
+    .not-approved {
+        color: red;
+    }
+</style>
+
+<h2>Admin Panel</h2>
+
+<div class="user-grid">
+
+    @foreach (var item in Model)
+    {
+        var user = item.user;
+        var roles = item.roles;
+
+        <div class="user-card">
+
+            <div class="user-name">
+                @user.FirstName @user.LastName
+            </div>
+
+            <div>@user.Email</div>
+
+            @foreach (var role in roles)
+            {
+                var roleClass = role.ToLower();
+
+                <div class="role-badge @roleClass">
+                    @role
+                </div>
+            }
+
+            <div class="status @(user.IsApproved ? "approved" : "not-approved")">
+                @(user.IsApproved ? "Approved" : "Pending")
+            </div>
+
+        </div>
+    }
+
+</div>

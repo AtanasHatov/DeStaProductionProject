@@ -7,91 +7,52 @@ using System.Data;
 
 namespace DeStaProduction.Controllers
 {
+    using DeStaProduction.Core.Contracts;
+    using DeStaProduction.ViewModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
     [Authorize(Roles = "Admin")]
     public class EventTypeController : Controller
     {
-        private readonly ApplicationDbContext context;
+        private readonly IEventTypeService eventTypeService;
 
-        public EventTypeController(ApplicationDbContext context)
+        public EventTypeController(IEventTypeService _eventTypeService)
         {
-            this.context = context;
+            eventTypeService = _eventTypeService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var eventTypes = await context.EventTypes
-                .Select(x=> new EventTypeViewModel
-                {
-                    Id=x.Id,
-                    Name=x.Name,
-                    Events=x.Events
+            var data = await eventTypeService.GetAllAsync();
 
-                })
-                .ToListAsync();
-            return View(eventTypes);
+            var model = data.Select(x => new EventTypeViewModel
+            {
+                Id = x.Id,
+                Name = x.Name
+            });
+
+            return View(model);
         }
 
- 
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         [HttpPost]
         public async Task<IActionResult> Create(EventTypeViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            var evtp = new EventType 
-            {
-                Id = Guid.NewGuid(),
-                Name = model.Name,
-                Events = model.Events
-            };
-
-
-            await context.EventTypes.AddAsync(evtp);
-            await context.SaveChangesAsync();
+            await eventTypeService.AddAsync(model.Name);
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
-            EventType eventType = await context.EventTypes.FindAsync(id);
-
-            if (eventType == null)
-            {
-                return NotFound();
-            }
-            EventTypeViewModel eventTypeViewModel = new EventTypeViewModel
-            {
-                Id = eventType.Id,
-                Name = eventType.Name,
-                Events = eventType.Events
-            };
-            return View(eventTypeViewModel);
-        }
-        [HttpPost]
-        [ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-            var eventType = await context.EventTypes.FindAsync(id);
-
-            if (eventType != null)
-            {
-                context.EventTypes.Remove(eventType);
-                await context.SaveChangesAsync();
-            }
-
+            await eventTypeService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

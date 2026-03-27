@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260325114511_DSInit")]
+    [Migration("20260327095329_DSInit")]
     partial class DSInit
     {
         /// <inheritdoc />
@@ -222,7 +222,7 @@ namespace DeStaProduction.Infrastucture.Migrations
 
             modelBuilder.Entity("DeStaProduction.Infrastucture.Entities.Schedule", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -239,7 +239,7 @@ namespace DeStaProduction.Infrastucture.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<Guid>("PerformanceId")
+                    b.Property<Guid?>("PerformanceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
@@ -457,9 +457,7 @@ namespace DeStaProduction.Infrastucture.Migrations
                 {
                     b.HasOne("DeStaProduction.Infrastucture.Entities.Performance", "Performance")
                         .WithMany("Schedules")
-                        .HasForeignKey("PerformanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PerformanceId");
 
                     b.HasOne("DeStaProduction.Infrastucture.Entities.DeStaUser", "User")
                         .WithMany("Schedules")

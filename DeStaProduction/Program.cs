@@ -2,40 +2,53 @@ using Microsoft.EntityFrameworkCore;
 using DeStaProduction.Infrastucture.Entities;
 using Microsoft.AspNetCore.Identity;
 using DeStaProduction.Seed;
+using DeStaProduction.Core.Contracts;
+using DeStaProduction.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); 
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 builder.Services.AddDefaultIdentity<DeStaUser>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false  ;
+    options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequiredLength = 5;
 })
-    .AddRoles<IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+.AddRoles<IdentityRole<Guid>>()
+.AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/Login";
 });
 
+
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IEventTypeService, EventTypeService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IPerformanceService, PerformanceService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+
+
 var app = builder.Build();
+
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<DeStaUser>>();
-    await IdentitySeeder.SeedRoldesAsync(roleManager,userManager);
+
+    await IdentitySeeder.SeedRoldesAsync(roleManager, userManager);
 }
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -43,7 +56,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -52,11 +64,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();
