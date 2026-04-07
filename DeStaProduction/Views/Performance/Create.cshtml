@@ -1,41 +1,41 @@
 ﻿@using DeStaProduction.ViewModels
 @model PerformanceViewModel
 
-<h2>Create Performance</h2>
+<h2>Създай Представление</h2>
 
 <form method="post">
     <div class="mb-3">
-        <label asp-for="Title"></label>
+        <label asp-for="Title">Заглавие</label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Description"></label>
+        <label asp-for="Description">Описание</label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="EventId">Event</label>
+        <label asp-for="EventId">Заглавие</label>
         <select asp-for="EventId" asp-items="ViewBag.Events" class="form-control">
-            <option value="">-- Select Event --</option>
+            <option value="">-- Избери Заглавие --</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label asp-for="LocationId">Location</label>
+        <label asp-for="LocationId">Локация</label>
         <select asp-for="LocationId" asp-items="ViewBag.Locations" class="form-control">
-            <option value="">-- Select Location --</option>
+            <option value="">-- Избери локация --</option>
         </select>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Date"></label>
+        <label asp-for="Date">Дата</label>
         <input asp-for="Date" type="datetime-local" class="form-control" />
         <span asp-validation-for="Date" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Create</button>
+    <button type="submit" class="btn btn-success">Създай</button>
 </form>
 

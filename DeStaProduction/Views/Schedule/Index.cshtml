@@ -13,11 +13,11 @@
     var userId = user.Id;
 }
 
-<h2>Calendar</h2>
+<h2>График</h2>
 
 @if (User.IsInRole("Admin"))
 {
-     <div class="mb-3"> <a asp-controller="Admin" asp-action="AssignTask" class="btn btn-warning">Task</a> <a asp-controller="Performance" asp-action="Create" class="btn btn-primary">Performance</a> <a asp-controller="Admin" asp-action="MyTask" class="btn btn-dark">My Task</a> </div>
+     <div class="mb-3"> <a asp-controller="Admin" asp-action="AssignTask" class="btn btn-warning">Добави задача на актьор</a> <a asp-controller="Performance" asp-action="Create" class="btn btn-primary">Добави представление</a> <a asp-controller="Admin" asp-action="MyTask" class="btn btn-dark">Добави задача за мен</a> </div>
 }
 
 <a asp-action="Index" asp-route-month="@(ViewBag.Month == 1 ? 12 : ViewBag.Month - 1)"
@@ -203,49 +203,3 @@
         });
     });
 </script>
-@* <script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const modal = document.getElementById("modal");
-
-        modal.addEventListener("show.bs.modal", function (event) {
-
-            const button = event.relatedTarget;
-
-            const title = button.getAttribute("data-title");
-            const actors = button.getAttribute("data-actors");
-            const desc = button.getAttribute("data-desc");
-            const time = button.getAttribute("data-time");
-            const location = button.getAttribute("data-location");
-
-            const isAdmin = '@User.IsInRole("Admin")' === 'True';
-            const isArtist = '@User.IsInRole("Artist")' === 'True';
-
-            if (isAdmin) {
-                document.getElementById("actors").innerHTML =
-                    "🎭 <strong>" + (actors || "Без заглавие") + "</strong>";
-
-                document.getElementById("title").innerHTML =
-                    "👥 <strong>Актьор:</strong><br>" + (title || "Няма информация");
-            }
-            else {
-                document.getElementById("title").innerHTML =
-                    "🎭 <strong>" + (title || "Без заглавие") + "</strong>";
-
-                let actorsText = actors;
-
-                if (isArtist && (!actors || actors.trim() === "")) {
-                    actorsText = "АЗ";
-                }
-
-                document.getElementById("actors").innerHTML =
-                    "👥 <strong>Актьори:</strong><br>" + (actorsText || "Няма информация");
-            }
-
-            document.getElementById("desc").innerHTML =
-                "📝 <strong>Описание:</strong><br>" + (desc || "Няма описание") + "<br><br>" +
-                "⏰ <strong>Час:</strong> " + (time || "няма") + "<br>" +
-                "🏛️ <strong>Локация:</strong> " + (location || "няма");
-        });
-    });
-</script> *@

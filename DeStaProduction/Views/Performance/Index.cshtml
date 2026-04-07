@@ -1,21 +1,21 @@
 ﻿@using DeStaProduction.ViewModels
 @model IEnumerable<PerformanceViewModel>
 
-<h2>Performances</h2>
+<h2>Представления</h2>
 @if (User.IsInRole("Admin"))
 {
-    <a asp-action="Create" class="btn btn-primary mb-2">Add Performance</a>
+    <a asp-action="Create" class="btn btn-primary mb-2">Добави представление</a>
 }
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Event</th>
-            <th>Location</th>
-            <th>Date</th>
+            <th>Заглавие</th>
+            <th>Репертоарно заглавие</th>
+            <th>Локация</th>
+            <th>Дата</th>
             @if (User.IsInRole("Admin"))
             {
-                <th>Actions</th>
+                <th>Действия</th>
             }
         </tr>
     </thead>
@@ -31,7 +31,7 @@
                 {
                     <td>
                         <form asp-action="Delete" asp-route-id="@p.Id" method="post" style="display:inline">
-                            <button class="btn btn-danger btn-sm">Delete</button>
+                            <button class="btn btn-danger btn-sm">Изтрий</button>
                         </form>
                     </td>
                 }

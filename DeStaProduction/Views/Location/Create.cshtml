@@ -1,33 +1,33 @@
 ﻿@using DeStaProduction.ViewModels
 @model LocationViewModel
 
-<h2>Create Location</h2>
+<h2>Създай локация</h2>
 
 <form method="post">
     <div class="mb-3">
-        <label asp-for="Name"></label>
+        <label asp-for="Name">Име</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Address"></label>
+        <label asp-for="Address">Адрес</label>
         <input asp-for="Address" class="form-control" />
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="City"></label>
+        <label asp-for="City">Град</label>
         <input asp-for="City" class="form-control" />
         <span asp-validation-for="City" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Capacity"></label>
+        <label asp-for="Capacity">Капацитет на залата</label>
         <input asp-for="Capacity" class="form-control" />
         <span asp-validation-for="Capacity" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Create</button>
+    <button type="submit" class="btn btn-success">Създай</button>
 </form>
 

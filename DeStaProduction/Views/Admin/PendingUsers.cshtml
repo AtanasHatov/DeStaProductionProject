@@ -1,7 +1,7 @@
 ﻿@using DeStaProduction.Infrastucture.Entities
 @model IEnumerable<DeStaUser>
 
-<h2>Pending Users</h2>
+<h2>Изчакващи потребители</h2>
 
 <table class="table">
     @foreach (var u in Model)
@@ -16,7 +16,7 @@
                         <option value="Artist">Artist</option>
                         <option value="User">User</option>
                     </select>
-                    <button class="btn btn-success">Approve</button>
+                    <button class="btn btn-success">Одобрявам</button>
                 </form>
             </td>
         </tr>

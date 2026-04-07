@@ -20,32 +20,32 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="EventType" asp-action="Index">Event Type</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="EventType" asp-action="Index">Вид събитие</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Location" asp-action="Index">Location</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Location" asp-action="Index">Локации</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Index">Event</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Index">Репертоар</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="PendingUsers">Pending Users</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="PendingUsers">Изчакващи потребители</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Настройки на админ</a>
                             </li>
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Schedule" asp-action="Index">Schedule</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Schedule" asp-action="Index">График</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Performance" asp-action="Index">Performance</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Performance" asp-action="Index">Представления</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

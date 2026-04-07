@@ -1,17 +1,17 @@
 ﻿@using DeStaProduction.ViewModels
 @model IEnumerable<EventViewModel>
 
-<h2>Events</h2>
+<h2>Репертоар</h2>
 
-<a asp-action="Create" class="btn btn-primary mb-2">Create Event</a>
+<a asp-action="Create" class="btn btn-primary mb-2">Създай Заглавие</a>
 
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Type</th>
-            <th>Duration (min)</th>
-            <th>Actions</th>
+            <th>Заглавие</th>
+            <th>Категория</th>
+            <th>Времетраене (мин)</th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody>
@@ -23,10 +23,10 @@
                 <td>@e.Duration</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@e.Id" class="btn btn-info btn-sm">
-                        Details
+                        Детайли
                     </a>
                     <form asp-action="Delete" asp-route-id="@e.Id" method="post" style="display:inline">
-                        <button class="btn btn-danger btn-sm">Delete</button>
+                        <button class="btn btn-danger btn-sm">Изтрий</button>
                     </form>
                 </td>
             </tr>

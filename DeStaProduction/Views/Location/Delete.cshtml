@@ -1,15 +1,15 @@
 ﻿@using DeStaProduction.ViewModels
 @model LocationViewModel
 
-<h2>Delete Location</h2>
+<h2>Изтрий локация</h2>
 
-<p>Are you sure you want to delete <strong>@Model.Name</strong>?</p>
+<p>Сигурен ли сте,че искате да изтриете <strong>@Model.Name</strong>?</p>
 
 <form asp-action="DeleteConfirmd" asp-controller="Location" method="post">
     <input type="hidden" asp-for="Id" />
 
-    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="submit" class="btn btn-danger">Изтрий</button>
     <a asp-action="Index" asp-controller="Location" class="btn btn-secondary">
-        Cancel
+        Отхвърли
     </a>
 </form>
