@@ -47,12 +47,30 @@ namespace DeStaProduction.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-        [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var data = await eventTypeService.GetAllAsync();
+
+            var item = data.FirstOrDefault(x => x.Id == id);
+
+            if (item == null)
+                return NotFound();
+
+            var model = new EventTypeViewModel
+            {
+                Id = item.Id,
+                Name = item.Name
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmd(Guid id)
+        {
             await eventTypeService.DeleteAsync(id);
+
             return RedirectToAction(nameof(Index));
         }
     }
-}
+    }

@@ -20,7 +20,9 @@ namespace DeStaProduction.Core.Services
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    City = x.City
+                    City = x.City,
+                    Capacity = x.Capacity,
+                    Address = x.Address
                 }).ToListAsync();
 
         public async Task AddAsync(LocationDto model)
@@ -30,8 +32,8 @@ namespace DeStaProduction.Core.Services
                 Id = Guid.NewGuid(),
                 Name = model.Name,
                 City = model.City,
-                Address = "",
-                Capacity = 0
+                Address = model.Address,
+                Capacity = model.Capacity
             });
             await context.SaveChangesAsync();
         }

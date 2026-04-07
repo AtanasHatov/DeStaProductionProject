@@ -11,6 +11,12 @@ namespace DeStaProduction.Infrastucture.Entities
         {
 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
 
         public DbSet<Event> Events { get; set; } 
         public DbSet<EventType> EventTypes { get; set; }

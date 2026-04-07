@@ -22,10 +22,10 @@
         <span asp-validation-for="Duration" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="EventType">Event Type</label>
-        <select asp-items=@ViewBag.EventTypes asp-for="@Model.EventType" class="form-control">
-            <option disabled selected>Select an event type</option>
+    <div class="form-group">
+        <label asp-for="EventType"></label>
+        <select asp-for="EventType" asp-items="ViewBag.EventTypes" class="form-control">
+            <option value="">-- Select Event Type --</option>
         </select>
     </div>
 

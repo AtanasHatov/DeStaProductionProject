@@ -1,7 +1,12 @@
 ﻿@using DeStaProduction.Infrastucture.Entities
 @using Microsoft.AspNetCore.Identity
-@model IEnumerable<Schedule>
+@model IEnumerable<DeStaProduction.ViewModels.ScheduleViewModel>
 @inject UserManager<DeStaUser> userManager
+
+@{
+    int month = (int)ViewBag.Month;
+    int year = (int)ViewBag.Year;
+}
 
 @{
     var user = await userManager.GetUserAsync(User);
@@ -12,19 +17,16 @@
 
 @if (User.IsInRole("Admin"))
 {
-    <div class="mb-3">
-        <a asp-controller="Admin" asp-action="AssignTask" class="btn btn-warning">Task</a>
-        <a asp-controller="Performance" asp-action="Create" class="btn btn-primary">Performance</a>
-        <a asp-controller="Admin" asp-action="MyTask" class="btn btn-dark">My Task</a>
-    </div>
+     <div class="mb-3"> <a asp-controller="Admin" asp-action="AssignTask" class="btn btn-warning">Task</a> <a asp-controller="Performance" asp-action="Create" class="btn btn-primary">Performance</a> <a asp-controller="Admin" asp-action="MyTask" class="btn btn-dark">My Task</a> </div>
 }
+
 <a asp-action="Index" asp-route-month="@(ViewBag.Month == 1 ? 12 : ViewBag.Month - 1)"
-asp-route-year="@(ViewBag.Month == 1 ? ViewBag.Year - 1 : ViewBag.Year)">←</a>
+   asp-route-year="@(ViewBag.Month == 1 ? ViewBag.Year - 1 : ViewBag.Year)">←</a>
 
 <h4>@ViewBag.Month / @ViewBag.Year</h4>
 
 <a asp-action="Index" asp-route-month="@(ViewBag.Month == 12 ? 1 : ViewBag.Month + 1)"
-asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a>
+   asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a>
 
 <div class="calendar-grid">
     <div class="day-header">Пон</div>
@@ -35,6 +37,7 @@ asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a
     <div class="day-header">Съб</div>
     <div class="day-header">Нед</div>
 
+ 
     @{
         var firstDay = new DateTime(ViewBag.Year, ViewBag.Month, 1);
         int offset = ((int)firstDay.DayOfWeek + 6) % 7;
@@ -45,10 +48,10 @@ asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a
         <div></div>
     }
 
-    @for (int day = 1; day <= DateTime.DaysInMonth(ViewBag.Year, ViewBag.Month); day++)
+    @for (int day = 1; day <= DateTime.DaysInMonth(year, month); day++)
     {
-        var date = new DateTime(ViewBag.Year, ViewBag.Month, day);
-        var daySchedules = Model.Where(x => x.Date.Day == day);
+        var date = new DateTime(year, month, day);
+        var daySchedules = Model.Where(x => x.Date.Date == date.Date);
 
         <div class="day">
             <div class="day-number">@day</div>
@@ -87,11 +90,12 @@ asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a
                     <div class="event-card bg-primary text-white"
                          data-bs-toggle="modal"
                          data-bs-target="#modal"
-                         data-title="@first.Performance?.Title"
-                         data-actors="@string.Join(", ", g.Select(x => x.User?.UserName))"
-                         data-desc="@first.Performance?.Description">
-
-                        🎭 @first.Performance?.Title
+                         data-title="@first.PerformanceTitle"
+                         data-actors="@string.Join(", ", g.Select(x => x.FirstName + " " + x.LastName))"
+                         data-desc="@first.Notes"
+                         data-time="@first.Date.ToString("HH:mm")"
+                         data-location="@first.LocationName">
+                        🎭 @first.PerformanceTitle
                     </div>
                 }
             }
@@ -103,10 +107,11 @@ asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a
                     <div class="event-card bg-warning"
                          data-bs-toggle="modal"
                          data-bs-target="#modal"
-                         data-title="@s.Type"
+                         data-title="@s.PerformanceTitle"
                          data-actors=""
-                         data-desc="@(s.Notes ?? "Няма описание")">
-
+                         data-desc="@s.Notes"
+                         data-time="@s.Date.ToString("HH:mm")"
+                         data-location="@s.LocationName">
                         🎬 @s.Type
                     </div>
                 }
@@ -118,31 +123,87 @@ asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a
                     <div class="event-card bg-dark text-white"
                          data-bs-toggle="modal"
                          data-bs-target="#modal"
-                         data-title="@(s.User?.FirstName + " " + s.User?.LastName)"
-                         data-actors="@s.Type"
-                         data-desc="@(s.Notes ?? "")">
-
-                        👤 @(s.User?.FirstName + " " + s.User?.LastName)
+                         data-title="@s.PerformanceTitle"
+                         data-actors=@($"{@s.FirstName} {s.LastName}")
+                         data-desc="@s.Notes"
+                         data-time="@s.Date.ToString("HH:mm")"
+                         data-location="@s.LocationName">
+                        👤 @($"{s.FirstName} {s.LastName}")
                     </div>
                 }
             }
         </div>
     }
+    
+
 </div>
 
 <div class="modal fade" id="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content p-3">
-
             <h5 id="title"></h5>
             <p id="actors"></p>
             <p id="desc"></p>
-
         </div>
     </div>
 </div>
-
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const modal = document.getElementById("modal");
+
+        if (!modal) return; 
+
+        modal.addEventListener("show.bs.modal", function (event) {
+
+            const button = event.relatedTarget;
+
+            if (!button) return; 
+
+            const title = button.getAttribute("data-title") || "";
+            const actors = button.getAttribute("data-actors") || "";
+            const desc = button.getAttribute("data-desc") || "";
+            const time = button.getAttribute("data-time") || "";
+            const location = button.getAttribute("data-location") || "";
+
+            const isAdmin = '@User.IsInRole("Admin")' === 'True';
+            const isArtist = '@User.IsInRole("Artist")' === 'True';
+
+            const titleEl = document.getElementById("title");
+            const actorsEl = document.getElementById("actors");
+            const descEl = document.getElementById("desc");
+
+            if (!titleEl || !actorsEl || !descEl) return; 
+
+            if (isAdmin) {
+                actorsEl.innerHTML =
+                    "🎭 <strong>" + (title) + "</strong>";
+
+                titleEl.innerHTML =
+                    "👥 <strong>Актьор:</strong><br>" + (actors || "Няма информация");
+            }
+            else {
+                titleEl.innerHTML =
+                    "🎭 <strong>" + (title || "Без заглавие") + "</strong>";
+
+                let actorsText = actors;
+
+                if (isArtist && (!actors || actors.trim() === "")) {
+                    actorsText = "АЗ";
+                }
+
+                actorsEl.innerHTML =
+                    "👥 <strong>Актьори:</strong><br>" + (actorsText || "Няма информация");
+            }
+
+            descEl.innerHTML =
+                "📝 <strong>Описание:</strong><br>" + (desc || "Няма описание") + "<br><br>" +
+                "⏰ <strong>Час:</strong> " + (time || "няма") + "<br>" +
+                "🏛️ <strong>Локация:</strong> " + (location || "няма");
+        });
+    });
+</script>
+@* <script>
     document.addEventListener("DOMContentLoaded", function () {
 
         const modal = document.getElementById("modal");
@@ -154,10 +215,37 @@ asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a
             const title = button.getAttribute("data-title");
             const actors = button.getAttribute("data-actors");
             const desc = button.getAttribute("data-desc");
+            const time = button.getAttribute("data-time");
+            const location = button.getAttribute("data-location");
 
-            document.getElementById("title").innerText = title || "";
-            document.getElementById("actors").innerText = actors || "";
-            document.getElementById("desc").innerText = desc || "";
+            const isAdmin = '@User.IsInRole("Admin")' === 'True';
+            const isArtist = '@User.IsInRole("Artist")' === 'True';
+
+            if (isAdmin) {
+                document.getElementById("actors").innerHTML =
+                    "🎭 <strong>" + (actors || "Без заглавие") + "</strong>";
+
+                document.getElementById("title").innerHTML =
+                    "👥 <strong>Актьор:</strong><br>" + (title || "Няма информация");
+            }
+            else {
+                document.getElementById("title").innerHTML =
+                    "🎭 <strong>" + (title || "Без заглавие") + "</strong>";
+
+                let actorsText = actors;
+
+                if (isArtist && (!actors || actors.trim() === "")) {
+                    actorsText = "АЗ";
+                }
+
+                document.getElementById("actors").innerHTML =
+                    "👥 <strong>Актьори:</strong><br>" + (actorsText || "Няма информация");
+            }
+
+            document.getElementById("desc").innerHTML =
+                "📝 <strong>Описание:</strong><br>" + (desc || "Няма описание") + "<br><br>" +
+                "⏰ <strong>Час:</strong> " + (time || "няма") + "<br>" +
+                "🏛️ <strong>Локация:</strong> " + (location || "няма");
         });
     });
-</script>
+</script> *@

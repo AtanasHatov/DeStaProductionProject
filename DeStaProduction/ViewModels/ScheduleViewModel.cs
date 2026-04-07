@@ -1,6 +1,4 @@
-﻿using DeStaProduction.Infrastucture.Entities;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DeStaProduction.ViewModels
 {
@@ -8,24 +6,23 @@ namespace DeStaProduction.ViewModels
     {
         public Guid Id { get; set; }
 
-        [Required]
         public DateTime Date { get; set; }
 
-        [Required]
         public bool IsAvailable { get; set; }
 
-        [Required]
-        [MaxLength(500)]
-        public string Notes { get; set; } = null!;
+        public string Notes { get; set; } = "";
 
-        [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }
 
-        public DeStaUser User { get; set; } = null!;
+        public string UserName { get; set; } = ""; 
 
-        [ForeignKey(nameof(Performance))]
         public Guid? PerformanceId { get; set; }
 
-        public Performance? Performance { get; set; }
+        public string PerformanceTitle { get; set; } = ""; 
+
+        public string Type { get; set; } = "";
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+        public string LocationName { get; set; } = "";
     }
 }

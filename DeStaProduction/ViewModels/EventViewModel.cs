@@ -1,4 +1,5 @@
-﻿using DeStaProduction.Infrastucture.Entities;
+﻿using DeStaProduction.Core.DTOs;
+using DeStaProduction.Infrastucture.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,7 +9,7 @@ namespace DeStaProduction.ViewModels
     {
         public Guid Id { get; set; }
 
-        public ICollection<Performance>? Performances { get; set; }
+        public List<PerformanceShortDto> Performances { get; set; } = new();
 
         [ForeignKey(nameof(Type))]
         public Guid EventType { get; set; }

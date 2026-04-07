@@ -16,17 +16,17 @@
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Event">Event</label>
+    <div class="form-group">
+        <label asp-for="EventId">Event</label>
         <select asp-for="EventId" asp-items="ViewBag.Events" class="form-control">
-            <option value="">-- Select event --</option>
+            <option value="">-- Select Event --</option>
         </select>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Location">Location</label>
+    <div class="form-group">
+        <label asp-for="LocationId">Location</label>
         <select asp-for="LocationId" asp-items="ViewBag.Locations" class="form-control">
-            <option value="">-- Select location --</option>
+            <option value="">-- Select Location --</option>
         </select>
     </div>
 

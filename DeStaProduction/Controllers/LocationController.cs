@@ -26,7 +26,8 @@ namespace DeStaProduction.Controllers
             {
                 Id = x.Id,
                 Name = x.Name,
-                City = x.City
+                City = x.City,
+                Capacity=x.Capacity
             });
 
             return View(model);
@@ -43,17 +44,58 @@ namespace DeStaProduction.Controllers
             await locationService.AddAsync(new LocationDto
             {
                 Name = model.Name,
-                City = model.City
+                City = model.City,
+                Capacity = model.Capacity,
+                Address = model.Address
             });
 
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteConfirmd(Guid id)
         {
             await locationService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var data = await locationService.GetAllAsync();
+            var item = data.FirstOrDefault(x => x.Id == id);
+
+            if (item == null)
+                return NotFound();
+
+            var model = new LocationViewModel
+            {
+                Id = item.Id,
+                Name = item.Name,
+                City = item.City,
+                Capacity = item.Capacity
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var data = await locationService.GetAllAsync();
+            var item = data.FirstOrDefault(x => x.Id == id);
+
+            if (item == null)
+                return NotFound();
+
+            var model = new LocationViewModel
+            {
+                Id = item.Id,
+                Name = item.Name,
+                City = item.City,
+                Capacity = item.Capacity,
+                Address = item.Address
+            };
+
+            return View(model);
         }
     }
 }

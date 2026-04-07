@@ -22,7 +22,9 @@
                 <td>@e.TypeName</td>
                 <td>@e.Duration</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@e.Id">Details</a> |
+                    <a asp-action="Details" asp-route-id="@e.Id" class="btn btn-info btn-sm">
+                        Details
+                    </a>
                     <form asp-action="Delete" asp-route-id="@e.Id" method="post" style="display:inline">
                         <button class="btn btn-danger btn-sm">Delete</button>
                     </form>

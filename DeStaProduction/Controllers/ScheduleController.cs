@@ -1,5 +1,6 @@
 ﻿using DeStaProduction.Core.Contracts;
 using DeStaProduction.Infrastucture.Entities;
+using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,9 @@ public class ScheduleController : Controller
         int m = month ?? DateTime.Now.Month;
         int y = year ?? DateTime.Now.Year;
 
+        ViewBag.Month = m;
+        ViewBag.Year = y;
+
         var user = await userManager.GetUserAsync(User);
 
         var role = User.IsInRole("Admin") ? "Admin" :
@@ -28,6 +32,22 @@ public class ScheduleController : Controller
 
         var data = await scheduleService.GetAllAsync(m, y, role, user.Id);
 
-        return View(data);
+
+        var model = data.Select(x => new ScheduleViewModel
+        {
+            Id = x.Id,
+            Date = x.Date,
+            IsAvailable = x.IsAvailable,
+            Notes = x.Notes ?? "",
+            UserId = x.UserId,
+            Type = x.Type,
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            UserName = x.UserName,
+            LocationName = x.LocationName,
+            PerformanceTitle = x.PerformanceTitle    
+        });
+
+        return View(model);
     }
 }

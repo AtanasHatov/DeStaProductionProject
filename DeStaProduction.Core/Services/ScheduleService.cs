@@ -18,6 +18,8 @@ public class ScheduleService : IScheduleService
             .Include(s => s.User)
             .Include(s => s.Performance)
             .ThenInclude(p => p.Event)
+            .Include(s => s.Performance)
+            .ThenInclude(p => p.Location)
             .AsQueryable();
 
         if (role == "Artist")
@@ -40,7 +42,10 @@ public class ScheduleService : IScheduleService
             Notes = s.Notes,
             IsPublic = s.IsPublic,
             UserName = s.User?.UserName,
-            PerformanceTitle = s.Performance?.Title
+            PerformanceTitle = s.Performance?.Title,
+            FirstName = s.User.FirstName,
+            LastName = s.User.LastName,
+            LocationName = s.Performance != null ? s.Performance.Location.Name : ""
         });
     }
 

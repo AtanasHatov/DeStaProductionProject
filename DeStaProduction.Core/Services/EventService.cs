@@ -48,4 +48,31 @@ public class EventService : IEventService
             await context.SaveChangesAsync();
         }
     }
+
+    public async Task<EventDto?> GetByIdAsync(Guid id)
+    {
+        return await context.Events
+            .Include(e => e.Type)
+            .Include(e => e.Performances)
+             .ThenInclude(p => p.Location)
+            .Where(e => e.Id == id)
+            .Select(e => new EventDto
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Description = e.Description,
+                Duration = e.Duration,
+                TypeName = e.Type.Name,
+
+                Performances = e.Performances
+    .Select(p => new PerformanceShortDto
+    {
+        Title = p.Title,
+        Date = p.Date,
+        Location = p.Location.Name
+    })
+    .ToList()
+            })
+            .FirstOrDefaultAsync();
+    }
 }

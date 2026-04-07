@@ -1,11 +1,11 @@
-﻿@using DeStaProduction.ViewModels
-@model EventViewModel
+﻿@model DeStaProduction.ViewModels.EventViewModel
 
 <h2>@Model.Title</h2>
 
 <p><strong>Тип събитие:</strong> @Model.TypeName</p>
 <p><strong>Описание на събитието:</strong> @Model.Description</p>
 <p><strong>Времетраене:</strong> @Model.Duration мин</p>
+
 
 <h4>Представления</h4>
 
@@ -14,7 +14,7 @@
     <ul>
         @foreach (var p in Model.Performances)
         {
-            <li>@p.Title – @p.Date.ToString("dd.MM.yyyy HH:mm") в @p.Location.Name</li>
+            <li>@p.Title – @p.Date.ToString("dd.MM.yyyy HH:mm") в @p.Location</li>
         }
     </ul>
 }

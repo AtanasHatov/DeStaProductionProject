@@ -33,7 +33,10 @@ namespace DeStaProduction.Core.Services
             {
                 Id = Guid.NewGuid(),
                 Title = model.Title,
-                Date = model.Date
+                Description = model.Description, 
+                Date = model.Date,
+                EventId = model.EventId,
+                LocationId = model.LocationId
             });
 
             await context.SaveChangesAsync();
@@ -41,10 +44,17 @@ namespace DeStaProduction.Core.Services
 
         public async Task DeleteAsync(Guid id)
         {
-            var entity = await context.Performances.FindAsync(id);
-            if (entity != null)
+            var performance = await context.Performances.FindAsync(id);
+
+            if (performance != null)
             {
-                context.Performances.Remove(entity);
+                var schedules = context.Schedules
+                    .Where(s => s.PerformanceId == id);
+
+                context.Schedules.RemoveRange(schedules);
+
+                context.Performances.Remove(performance);
+
                 await context.SaveChangesAsync();
             }
         }

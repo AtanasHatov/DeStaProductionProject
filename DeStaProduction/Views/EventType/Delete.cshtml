@@ -9,8 +9,11 @@
     <strong>Name:</strong> @Model.Name
 </div>
 
-<form method="post">
+<form asp-action="DeleteConfirmd" asp-controller="EventType" method="post">
     <input type="hidden" asp-for="Id" />
+
     <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <a asp-action="Index" asp-controller="EventType" class="btn btn-secondary">
+        Cancel
+    </a>
 </form>

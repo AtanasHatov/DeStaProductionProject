@@ -88,7 +88,24 @@ namespace DeStaProduction.Controllers
         {
             if (!await scheduleService.IsUserAvailable(model.UserId, model.Date))
             {
-                ModelState.AddModelError("", "Актьорът НЕ е свободен!");
+                var actor = await userManager.FindByIdAsync(model.UserId.ToString());
+
+                ModelState.AddModelError("", $"Актьорът {actor.FirstName} {actor.LastName} е зает!");
+
+                var users = context.Users.ToList();
+                var artists = new List<DeStaUser>();
+
+                foreach (var user in users)
+                {
+                    if (await userManager.IsInRoleAsync(user, "Artist"))
+                    {
+                        artists.Add(user);
+                    }
+                }
+
+                ViewBag.Actors = new SelectList(artists, "Id", "UserName");
+                ViewBag.Performances = new SelectList(context.Performances, "Id", "Title");
+
                 return View(model);
             }
 
