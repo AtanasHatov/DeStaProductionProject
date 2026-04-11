@@ -42,12 +42,20 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<DeStaUser>>();
+    var services = scope.ServiceProvider;
 
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<DeStaUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+    await context.Database.MigrateAsync();
+
+    
     await IdentitySeeder.SeedRoldesAsync(roleManager, userManager);
-}
 
+   
+    await ApplicationSeeder.SeedAsync(context);
+}
 
 if (app.Environment.IsDevelopment())
 {

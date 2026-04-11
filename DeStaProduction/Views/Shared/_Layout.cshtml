@@ -10,46 +10,26 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DeStaProduction</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Начало</a>
-                        </li>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="EventType" asp-action="Index">Вид събитие</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Location" asp-action="Index">Локации</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Event" asp-action="Index">Репертоар</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="PendingUsers">Изчакващи потребители</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Настройки на админ</a>
-                            </li>
-                        }
+        <nav class="netflix-nav">
+            <div class="nav-left">
+                <a class="logo" asp-controller="Home" asp-action="Index">DeStaProduction 🎭</a>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Schedule" asp-action="Index">График</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Performance" asp-action="Index">Представления</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+                <a asp-controller="Home" asp-action="Index">Начало</a>
+                <a asp-controller="Performance" asp-action="Index">Представления</a>
+                <a asp-controller="Schedule" asp-action="Index">График</a>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="EventType" asp-action="Index">Вид събитие</a>
+                    <a asp-controller="Location" asp-action="Index">Локации</a>
+                    <a asp-controller="Event" asp-action="Index">Репертоар</a>
+                    <a asp-controller="Admin" asp-action="PendingUsers">Потребители</a>
+                    <a asp-controller="Admin" asp-action="Index">Админ</a>
+                }
+            </div>
+
+            <div class="nav-right">
+                <partial name="_LoginPartial" />
             </div>
         </nav>
     </header>
@@ -70,3 +50,38 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+.netflix-nav {
+    background: linear-gradient(to right, #000, #111);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.netflix-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.netflix-nav a:hover {
+    color: red;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: red !important;
+}
+
+.nav-right {
+    color: white;
+}

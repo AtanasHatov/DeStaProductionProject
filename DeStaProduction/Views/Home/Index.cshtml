@@ -1,8 +1,85 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<DeStaProduction.Infrastucture.Entities.Performance>
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>DeStaProduction 🎭</h1>
+        <p>Сцената оживява тук</p>
+        <a href="/Performance" class="btn-main">Виж всички</a>
+    </div>
+</div>
+
+@* <div class="section dark">
+    @if (Model is null)
+    {
+        <p>Няма актуални представления</p>
+    }
+    else
+    {
+        <h2>🔥 Актуални представления</h2>
+
+        <div class="cards">
+            @foreach (var p in Model)
+            {
+                <div class="card fade-in">
+                    <h3>@p.Title</h3>
+                    <p>@p.Date.ToString("dd.MM.yyyy HH:mm")</p>
+                    <p>@p.Location.Name</p>
+                </div>
+            }
+        </div>
+    }
+</div> *@
+
+.hero {
+    height: 80vh;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                url('https://images.unsplash.com/photo-1503095396549-807759245b35');
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+.hero h1 {
+    font-size: 70px;
+    animation: fadeUp 1s ease;
+}
+
+.btn-main {
+    background: red;
+    padding: 12px 25px;
+    border-radius: 10px;
+    color: white;
+    text-decoration: none;
+}
+
+.section.dark {
+    background: #111;
+    color: white;
+    padding: 60px;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    width: 220px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.fade-in {
+    animation: fadeIn 1s ease;
+}

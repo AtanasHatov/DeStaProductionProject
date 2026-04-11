@@ -425,7 +425,7 @@ namespace DeStaProduction.Infrastucture.Migrations
                     b.HasOne("DeStaProduction.Infrastucture.Entities.EventType", "Type")
                         .WithMany("Events")
                         .HasForeignKey("EventType")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Type");
@@ -436,13 +436,13 @@ namespace DeStaProduction.Infrastucture.Migrations
                     b.HasOne("DeStaProduction.Infrastucture.Entities.Event", "Event")
                         .WithMany("Performances")
                         .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DeStaProduction.Infrastucture.Entities.Location", "Location")
                         .WithMany("Events")
                         .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Event");
@@ -454,7 +454,8 @@ namespace DeStaProduction.Infrastucture.Migrations
                 {
                     b.HasOne("DeStaProduction.Infrastucture.Entities.Performance", "Performance")
                         .WithMany("Schedules")
-                        .HasForeignKey("PerformanceId");
+                        .HasForeignKey("PerformanceId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DeStaProduction.Infrastucture.Entities.DeStaUser", "User")
                         .WithMany("Schedules")
