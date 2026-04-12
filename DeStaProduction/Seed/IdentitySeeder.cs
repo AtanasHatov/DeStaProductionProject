@@ -30,8 +30,8 @@ namespace DeStaProduction.Seed
                 {
                     UserName = adminEmail,
                     Email = adminEmail,
-                    FirstName = "System",
-                    LastName = "Admin",
+                    FirstName = "Атанас",
+                    LastName = "Хътов",
                     EmailConfirmed = true,
                     IsApproved = true
                 };

@@ -1,16 +1,22 @@
-﻿@using DeStaProduction.ViewModels
-@model EventTypeViewModel
+﻿@model DeStaProduction.ViewModels.EventTypeViewModel
 
-<h2>Създай категория събитие</h2>
+<section class="create-page">
 
-<form method="post">
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label">Име</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+    <div class="create-container small-form">
+
+        <h2>Добави вид събитие</h2>
+
+        <form method="post">
+
+            <div class="form-group">
+                <label>Име</label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+
+            <button class="btn-create">Създай</button>
+
+        </form>
+
     </div>
 
-    <button type="submit" class="btn btn-success">Запази</button>
-    <a asp-action="Index" class="btn btn-secondary">Назад</a>
-</form>
-
+</section>

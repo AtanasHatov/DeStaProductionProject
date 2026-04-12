@@ -1,85 +1,53 @@
-﻿@model IEnumerable<DeStaProduction.Infrastucture.Entities.Performance>
+﻿@model List<DeStaProduction.Infrastucture.Entities.Performance>
 
-<div class="hero">
-    <div class="hero-content">
-        <h1>DeStaProduction 🎭</h1>
-        <p>Сцената оживява тук</p>
-        <a href="/Performance" class="btn-main">Виж всички</a>
+@{
+    ViewData["Title"] = "Начало";
+}
+
+<section class="hero">
+    <video autoplay muted loop class="hero-video">
+        <source src="/videos/theater.mp4" type="video/mp4">
+    </video>
+
+    <div class="hero-overlay">
+        <h1>DeSta Production</h1>
+        <p>Магията на театъра започва тук</p>
+        <a href="#performances" class="btn-main">Виж представления</a>
     </div>
-</div>
+</section>
+<section id="performances" class="performances-section">
+    <div class="section-header">
+        <h2 class="section-title">Предстоящи представления</h2>
+    </div>
 
-@* <div class="section dark">
-    @if (Model is null)
-    {
-        <p>Няма актуални представления</p>
-    }
-    else
-    {
-        <h2>🔥 Актуални представления</h2>
-
-        <div class="cards">
-            @foreach (var p in Model)
-            {
-                <div class="card fade-in">
-                    <h3>@p.Title</h3>
-                    <p>@p.Date.ToString("dd.MM.yyyy HH:mm")</p>
-                    <p>@p.Location.Name</p>
+    <div class="cards-container">
+        @foreach (var item in Model)
+        {
+            <div class="performance-card ticket">
+                <div class="ticket-left">
+                    <h3>@item.Title</h3>
+                    <p>@item.Date.ToString("dd MMM yyyy HH:mm")</p>
+                    <p>@item.Location</p>
                 </div>
-            }
-        </div>
-    }
-</div> *@
 
-.hero {
-    height: 80vh;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                url('https://images.unsplash.com/photo-1503095396549-807759245b35');
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-}
+                <div class="ticket-right">
+                    <span>THEATER</span>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
 
-.hero h1 {
-    font-size: 70px;
-    animation: fadeUp 1s ease;
-}
+<div id="particles-js"></div>
 
-.btn-main {
-    background: red;
-    padding: 12px 25px;
-    border-radius: 10px;
-    color: white;
-    text-decoration: none;
-}
-
-.section.dark {
-    background: #111;
-    color: white;
-    padding: 60px;
-}
-
-.cards {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.card {
-    background: #222;
-    padding: 20px;
-    border-radius: 10px;
-    width: 220px;
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: scale(1.05);
-}
-
-.fade-in {
-    animation: fadeIn 1s ease;
-}
+<script>
+    particlesJS("particles-js", {
+      particles: {
+        number: { value: 50 },
+        size: { value: 3 },
+        color: { value: "#ffd700" },
+        line_linked: { enable: true, color: "#ffd700" }
+      }
+    });
+</script>

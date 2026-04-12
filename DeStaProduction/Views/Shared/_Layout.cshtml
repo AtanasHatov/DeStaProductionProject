@@ -10,21 +10,25 @@
 </head>
 <body>
     <header>
-        <nav class="netflix-nav">
+        <nav class="navbar custom-navbar">
             <div class="nav-left">
-                <a class="logo" asp-controller="Home" asp-action="Index">DeStaProduction 🎭</a>
 
-                <a asp-controller="Home" asp-action="Index">Начало</a>
-                <a asp-controller="Performance" asp-action="Index">Представления</a>
-                <a asp-controller="Schedule" asp-action="Index">График</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <img src="/images/logo.jpg" class="logo">
+                    <span class="brand-text">DeSta Production</span>
+                </a>
+
+                <a class="nav-link" asp-controller="Home" asp-action="Index">Начало</a>
+                <a class="nav-link" asp-controller="Performance" asp-action="Index">Представления</a>
+                <a class="nav-link" asp-controller="Schedule" asp-action="Index">График</a>
 
                 @if (User.IsInRole("Admin"))
                 {
-                    <a asp-controller="EventType" asp-action="Index">Вид събитие</a>
-                    <a asp-controller="Location" asp-action="Index">Локации</a>
-                    <a asp-controller="Event" asp-action="Index">Репертоар</a>
-                    <a asp-controller="Admin" asp-action="PendingUsers">Потребители</a>
-                    <a asp-controller="Admin" asp-action="Index">Админ</a>
+                    <a class="nav-link admin-link" asp-controller="EventType" asp-action="Index">Вид събитие</a>
+                    <a class="nav-link admin-link" asp-controller="Location" asp-action="Index">Локации</a>
+                    <a class="nav-link admin-link" asp-controller="Event" asp-action="Index">Репертоар</a>
+                    <a class="nav-link admin-link" asp-controller="Admin" asp-action="PendingUsers">Потребители</a>
+                    <a class="nav-link admin-link" asp-controller="Admin" asp-action="Index">Админ</a>
                 }
             </div>
 
@@ -51,37 +55,3 @@
 </body>
 </html>
 
-.netflix-nav {
-    background: linear-gradient(to right, #000, #111);
-    padding: 15px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.netflix-nav a {
-    color: white;
-    text-decoration: none;
-    font-size: 15px;
-    transition: 0.3s;
-}
-
-.netflix-nav a:hover {
-    color: red;
-}
-
-.logo {
-    font-size: 22px;
-    font-weight: bold;
-    color: red !important;
-}
-
-.nav-right {
-    color: white;
-}

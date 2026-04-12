@@ -1,33 +1,37 @@
-﻿@using DeStaProduction.ViewModels
-@model LocationViewModel
+﻿@model DeStaProduction.ViewModels.LocationViewModel
 
-<h2>Създай локация</h2>
+<section class="create-page">
 
-<form method="post">
-    <div class="mb-3">
-        <label asp-for="Name">Име</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+    <div class="create-container small-form">
+
+        <h2>Добави локация</h2>
+
+        <form method="post">
+
+            <div class="form-group">
+                <label>Име</label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Град</label>
+                <input asp-for="City" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Адрес</label>
+                <input asp-for="Address" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label>Капацитет</label>
+                <input asp-for="Capacity" class="form-control" />
+            </div>
+
+            <button class="btn-create">Създай</button>
+
+        </form>
+
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Address">Адрес</label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="City">Град</label>
-        <input asp-for="City" class="form-control" />
-        <span asp-validation-for="City" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Capacity">Капацитет на залата</label>
-        <input asp-for="Capacity" class="form-control" />
-        <span asp-validation-for="Capacity" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Създай</button>
-</form>
-
+</section>

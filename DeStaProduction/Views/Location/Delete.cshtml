@@ -1,15 +1,22 @@
-﻿@using DeStaProduction.ViewModels
-@model LocationViewModel
+﻿@model DeStaProduction.ViewModels.LocationViewModel
 
-<h2>Изтрий локация</h2>
+<section class="create-page">
 
-<p>Сигурен ли сте,че искате да изтриете <strong>@Model.Name</strong>?</p>
+    <div class="create-container small-form">
 
-<form asp-action="DeleteConfirmd" asp-controller="Location" method="post">
-    <input type="hidden" asp-for="Id" />
+        <h2>Изтриване</h2>
 
-    <button type="submit" class="btn btn-danger">Изтрий</button>
-    <a asp-action="Index" asp-controller="Location" class="btn btn-secondary">
-        Отхвърли
-    </a>
-</form>
+        <p style="text-align:center;">
+            Сигурен ли си, че искаш да изтриеш:
+            <strong>@Model.Name</strong>?
+        </p>
+
+        <form asp-action="DeleteConfirmd" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <button class="btn-delete">Изтрий</button>
+        </form>
+
+    </div>
+
+</section>

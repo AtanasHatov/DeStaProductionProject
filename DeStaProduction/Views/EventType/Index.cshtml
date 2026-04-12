@@ -1,26 +1,31 @@
-﻿@using DeStaProduction.ViewModels
-@model IEnumerable<EventTypeViewModel>
+﻿@model IEnumerable<DeStaProduction.ViewModels.EventTypeViewModel>
 
-<h2>Категории събития</h2>
+<section class="performances-page">
 
-<a asp-action="Create" class="btn btn-primary mb-3">Създай нова категория събитие</a>
+    <div class="top-bar">
+        <h1 class="page-title">Видове събития</h1>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Име</th>
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
+        <a asp-action="Create" class="btn-add">
+            + Добави
+        </a>
+    </div>
+
+    <div class="performances-grid">
+
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@item.Name</td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Изтрий</a>
-                </td>
-            </tr>
+            <div class="performance-box small">
+
+                <h3>@item.Name</h3>
+
+                <form asp-action="Delete" method="get">
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <button class="btn-delete">Изтрий</button>
+                </form>
+
+            </div>
         }
-    </tbody>
-</table>
+
+    </div>
+
+</section>

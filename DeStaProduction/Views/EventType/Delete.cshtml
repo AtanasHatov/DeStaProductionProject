@@ -1,19 +1,21 @@
-﻿@using DeStaProduction.ViewModels
-@model EventTypeViewModel
+﻿@model DeStaProduction.ViewModels.EventTypeViewModel
 
-<h2>Изтрий категория събитие</h2>
+<section class="create-page">
 
-<h4>Сигурен ли сте, че искате да изтриете тази категория събитие?</h4>
+    <div class="create-container small-form">
 
-<div class="mb-3">
-    <strong>Name:</strong> @Model.Name
-</div>
+        <h2>Сигурен ли си?</h2>
 
-<form asp-action="DeleteConfirmd" asp-controller="EventType" method="post">
-    <input type="hidden" asp-for="Id" />
+        <p style="text-align:center;">
+            Ще изтриеш: <strong>@Model.Name</strong>
+        </p>
 
-    <button type="submit" class="btn btn-danger">Изтрий</button>
-    <a asp-action="Index" asp-controller="EventType" class="btn btn-secondary">
-        Отхвърли
-    </a>
-</form>
+        <form asp-action="DeleteConfirmd" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <button class="btn-delete">Изтрий</button>
+        </form>
+
+    </div>
+
+</section>

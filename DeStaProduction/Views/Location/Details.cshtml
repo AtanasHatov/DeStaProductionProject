@@ -1,13 +1,39 @@
-﻿@using DeStaProduction.ViewModels
-@model LocationViewModel
+﻿@model DeStaProduction.ViewModels.LocationViewModel
 
-<h2>Детайли за Локацията</h2>
+<section class="details-page">
 
-<p><strong>Име:</strong> @Model.Name</p>
-<div class="mb-3">
-    <strong>Адрес:</strong> @Model.Address
-</div>
-<p><strong>Град:</strong> @Model.City</p>
-<p><strong>Капацитет на залата:</strong> @Model.Capacity</p>
+    <div class="details-container">
 
-<a asp-action="Index" class="btn btn-secondary">Върни</a>
+        <h2>@Model.Name</h2>
+        @if (Model.Capacity > 500 || Model.Capacity == 500)
+        {
+            <div class="badge-big">
+                ⭐ Голяма сцена
+            </div>
+        }
+        <div class="details-grid">
+
+            <div class="detail-box">
+                <span>📍 Град</span>
+                <p>@Model.City</p>
+            </div>
+
+            <div class="detail-box">
+                <span>👥 Капацитет</span>
+                <p>@Model.Capacity</p>
+            </div>
+
+            <div class="detail-box full">
+                <span>📌 Адрес</span>
+                <p>@Model.Address</p>
+            </div>
+
+        </div>
+
+        <div class="details-actions">
+            <a asp-action="Index" class="btn-details">⬅ Назад</a>
+        </div>
+
+    </div>
+
+</section>

@@ -1,31 +1,44 @@
-﻿@using DeStaProduction.ViewModels
-@model IEnumerable<LocationViewModel>
+﻿@model IEnumerable<DeStaProduction.ViewModels.LocationViewModel>
 
-<h2>Локации</h2>
+<section class="performances-page">
 
-<a asp-action="Create" class="btn btn-primary mb-2">Създай локация</a>
+    <div class="top-bar">
+        <h1 class="page-title">Локации</h1>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Име</th>
-            <th>Град</th>
-            <th>Капацитет на залата</th>
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var location in Model)
+        <a asp-action="Create" class="btn-add">
+            + Добави локация
+        </a>
+    </div>
+
+    <div class="performances-grid">
+
+        @foreach (var item in Model)
         {
-            <tr>
-                <td>@location.Name</td>
-                <td>@location.City</td>
-                <td>@location.Capacity</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@location.Id">Детайли</a> |
-                    <a asp-action="Delete" asp-route-id="@location.Id">Изтрий</a>
-                </td>
-            </tr>
+            <div class="performance-box location-card">
+
+                <div class="location-content">
+                    <h3>@item.Name</h3>
+
+                    <p class="info">📍 @item.City</p>
+                    <p class="info">👥 Капацитет: @item.Capacity</p>
+                </div>
+
+                <div class="location-actions">
+
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn-details">
+                        Детайли
+                    </a>
+
+                    <form asp-action="Delete" method="get">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button class="btn-delete">Изтрий</button>
+                    </form>
+
+                </div>
+
+            </div>
         }
-    </tbody>
-</table>
+
+    </div>
+
+</section>

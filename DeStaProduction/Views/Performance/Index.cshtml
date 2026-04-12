@@ -1,41 +1,48 @@
-﻿@using DeStaProduction.ViewModels
-@model IEnumerable<PerformanceViewModel>
+﻿@model IEnumerable<DeStaProduction.ViewModels.PerformanceViewModel>
 
-<h2>Представления</h2>
-@if (User.IsInRole("Admin"))
-{
-    <a asp-action="Create" class="btn btn-primary mb-2">Добави представление</a>
-}
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Заглавие</th>
-            <th>Репертоарно заглавие</th>
-            <th>Локация</th>
-            <th>Дата</th>
-            @if (User.IsInRole("Admin"))
-            {
-                <th>Действия</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model)
+<section class="performances-page">
+
+    <div class="top-bar">
+
+        <h1 class="page-title">Всички представления</h1>
+
+        @if (User.IsInRole("Admin"))
         {
-            <tr>
-                <td>@p.Title</td>
-                <td>@p.Event</td>
-                <td>@p.Location</td>
-                <td>@p.Date.ToString("dd.MM.yyyy HH:mm")</td>
-                @if (User.IsInRole("Admin"))
-                {
-                    <td>
-                        <form asp-action="Delete" asp-route-id="@p.Id" method="post" style="display:inline">
-                            <button class="btn btn-danger btn-sm">Изтрий</button>
-                        </form>
-                    </td>
-                }
-            </tr>
+            <a asp-action="Create" class="btn-add">
+                + Добави представление
+            </a>
         }
-    </tbody>
-</table>
+
+    </div>
+
+    <div class="performances-grid">
+
+        @foreach (var item in Model)
+        {
+            <div class="performance-box">
+
+                <div class="performance-content">
+                    <h3>@item.Title</h3>
+
+                    <p class="info">@item.Location</p>
+                    <p class="date">@item.Date.ToString("dd MMM yyyy HH:mm")</p>
+                </div>
+
+                <div class="performance-actions">
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-action="Delete" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn-delete">Изтрий</button>
+                        </form>
+                    }
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</section>
