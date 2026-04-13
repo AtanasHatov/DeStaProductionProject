@@ -3,25 +3,45 @@
 @inject SignInManager<DeStaUser> SignInManager
 @inject UserManager<DeStaUser> UserManager
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Здравей, @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-controller="User" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Излизане</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-controller="User" asp-action="Register">Регистрация</a>
-    </li>
-    <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-controller="User" asp-action="Login">Влез</a>
-    </li>
-}
-</ul>
+<div class="user-panel">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="user-info">
+
+            <div class="avatar">
+                @User.Identity?.Name?.Substring(0, 1).ToUpper()
+            </div>
+
+          
+
+            <form asp-area="Identity"
+                  asp-controller="User"
+                  asp-action="Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+
+                <button type="submit" class="logout-btn">
+                    Излизане
+                </button>
+            </form>
+
+        </div>
+    }
+    else
+    {
+        <a class="nav-link custom-link"
+           asp-area="Identity"
+           asp-controller="User"
+           asp-action="Register">
+            Регистрация
+        </a>
+
+        <a class="nav-link custom-link"
+           asp-area="Identity"
+           asp-controller="User"
+           asp-action="Login">
+            Влез
+        </a>
+    }
+
+</div>

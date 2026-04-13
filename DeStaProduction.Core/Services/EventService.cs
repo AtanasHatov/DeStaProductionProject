@@ -20,7 +20,8 @@ public class EventService : IEventService
                 Title = e.Title,
                 Description = e.Description,
                 Duration = e.Duration,
-                TypeName = e.Type.Name
+                TypeName = e.Type.Name,
+                ImagePath = e.ImagePath
             }).ToListAsync();
     }
 
@@ -32,7 +33,8 @@ public class EventService : IEventService
             Title = model.Title,
             Description = model.Description,
             Duration = model.Duration,
-            EventType = model.EventTypeId
+            EventType = model.EventTypeId,
+            ImagePath = model.ImagePath
         };
 
         await context.Events.AddAsync(entity);

@@ -66,13 +66,26 @@ public class EventController : Controller
 
             return View(model);
         }
+        if (model.ImageFile != null)
+        {
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await model.ImageFile.CopyToAsync(stream);
+            }
+
+            model.ImagePath = "/images/" + fileName;
+        }
 
         await eventService.AddAsync(new AddEventDto
         {
             Title = model.Title,
             Description = model.Description,
             Duration = model.Duration,
-            EventTypeId = model.EventType
+            EventTypeId = model.EventType,
+            ImagePath = model.ImagePath
         });
 
         return RedirectToAction(nameof(Index));

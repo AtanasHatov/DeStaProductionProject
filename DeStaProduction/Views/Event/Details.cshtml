@@ -1,27 +1,38 @@
 ﻿@model DeStaProduction.ViewModels.EventViewModel
 
-<h2>@Model.Title</h2>
+<div class="details-container">
 
-<p><strong>Тип събитие:</strong> @Model.TypeName</p>
-<p><strong>Описание на събитието:</strong> @Model.Description</p>
-<p><strong>Времетраене:</strong> @Model.Duration мин</p>
+    <div class="details-card">
 
+        <img src="@(string.IsNullOrEmpty(Model.ImagePath)
+            ? "/images/default-poster.jpg"
+            : Model.ImagePath)"
+             class="details-image" />
 
-<h4>Представления</h4>
+        <div class="details-content">
 
-@if (Model?.Performances?.Any() ?? false)
-{
-    <ul>
-        @foreach (var p in Model.Performances)
-        {
-            <li>@p.Title – @p.Date.ToString("dd.MM.yyyy HH:mm") в @p.Location</li>
-        }
-    </ul>
-}
-else
-{
-    <p>Все още няма събития.</p>
-}
+            <h1>@Model.Title</h1>
 
-<a asp-action="Index" class="btn btn-secondary">Назад</a>
+            <p class="details-type">@Model.TypeName</p>
 
+            <p class="details-desc">@Model.Description</p>
+
+            <div class="details-info">
+                ⏱ @Model.Duration минути
+            </div>
+
+            <h3>🎭 Предстоящи представления</h3>
+
+            @foreach (var p in Model.Performances)
+            {
+                <div class="performance-item">
+                    📅 @p.Date.ToString("dd MMM yyyy HH:mm")
+                    📍 @p.Location
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

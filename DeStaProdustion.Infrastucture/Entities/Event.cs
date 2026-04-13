@@ -35,7 +35,7 @@ namespace DeStaProduction.Infrastucture.Entities
         [MaxLength(1000)]
         public string Description { get; set; } = null!;
 
-		
-		
-	}
+        public string? ImagePath { get; set; }
+
+    }
 }

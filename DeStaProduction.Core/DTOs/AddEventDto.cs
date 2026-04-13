@@ -12,5 +12,6 @@ namespace DeStaProduction.Core.DTOs
         public string Description { get; set; } = null!;
         public int Duration { get; set; }
         public Guid EventTypeId { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

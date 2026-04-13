@@ -3,19 +3,35 @@
     var performances = ViewBag.Performances;
 }
 
-<h2>Моите Задачи</h2>
+<div class="theater-form-container">
 
-<form method="post">
-    <input asp-for="Date" type="datetime-local" class="form-control mb-2" />
+    <h2 class="form-title">📋 Моите задачи</h2>
 
-    <select asp-for="PerformanceId" class="form-control mb-2">
-        @foreach (var performance in performances)
-        {
-            <option value="@performance.Value">@performance.Text</option>
-        }
-    </select>
+    <form method="post" class="theater-form">
 
-    <textarea asp-for="Notes" class="form-control mb-2"></textarea>
+        <div class="form-group">
+            <label>📅 Дата</label>
+            <input asp-for="Date" type="datetime-local" class="form-control" />
+        </div>
 
-    <button class="btn btn-secondary">Запази</button>
-</form>
+        <div class="form-group">
+            <label>🎭 Представление</label>
+            <select asp-for="PerformanceId" class="form-control">
+                @foreach (var performance in performances)
+                {
+                    <option value="@performance.Value">@performance.Text</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>📝 Описание</label>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+        </div>
+
+        <button class="btn theater-btn">
+            🎬 Запази
+        </button>
+
+    </form>
+</div>

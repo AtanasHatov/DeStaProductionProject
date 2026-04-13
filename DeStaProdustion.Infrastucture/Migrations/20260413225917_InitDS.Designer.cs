@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260412012412_InitDS")]
+    [Migration("20260413225917_InitDS")]
     partial class InitDS
     {
         /// <inheritdoc />
@@ -128,6 +128,9 @@ namespace DeStaProduction.Infrastucture.Migrations
 
                     b.Property<Guid>("EventType")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()

@@ -3,41 +3,58 @@
     var performances = ViewBag.Performances;
 }
 
-<h2>Задача към актьор</h2>
+<div class="theater-form-container">
 
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <div>@error.ErrorMessage</div>
-        }
-    </div>
-}
+    <h2 class="form-title">🎬 Задача към актьор</h2>
 
-<form method="post">
-    <input asp-for="Date" type="datetime-local" class="form-control mb-2" />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="custom-error">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        </div>
+    }
 
-    <select asp-for="UserId" asp-items="ViewBag.Actors" class="form-control mb-2"></select>
+    <form method="post" class="theater-form">
 
-    <select asp-for="PerformanceId" class="form-control mb-2">
-        @foreach(var performance in performances)
-        {
-            <option value="@performance.Value">@performance.Text</option>
-        }
-    </select>
+        <div class="form-group">
+            <label>📅 Дата</label>
+            <input asp-for="Date" type="datetime-local" class="form-control" />
+        </div>
 
-    <textarea asp-for="Notes" class="form-control mb-2"></textarea>
+        <div class="form-group">
+            <label>👤 Актьор</label>
+            <select asp-for="UserId" asp-items="ViewBag.Actors" class="form-control"></select>
+        </div>
 
-    <div class="form-group">
-        <label>Тип</label>
-        <select asp-for="Type" class="form-control">
-            <option value="Performance">Представление</option>
-            <option value="Rehearsal">Репетиция</option>
-            <option value="Setup">Строене на сцена</option>
-            <option value="Personal">Друго</option>
-        </select>
-    </div>
+        <div class="form-group">
+            <label>🎭 Представление</label>
+            <select asp-for="PerformanceId" class="form-control">
+                @foreach (var performance in performances)
+                {
+                    <option value="@performance.Value">@performance.Text</option>
+                }
+            </select>
+        </div>
 
-    <button class="btn btn-warning">Запази</button>
-</form>
+        <div class="form-group">
+            <label>📝 Описание</label>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>🎬 Тип</label>
+            <select asp-for="Type" class="form-control">
+                <option value="Performance">Представление</option>
+                <option value="Rehearsal">Репетиция</option>
+                <option value="Setup">Строене на сцена</option>
+                <option value="Personal">Друго</option>
+            </select>
+        </div>
+
+        <button class="btn theater-btn">🎭 Запази</button>
+
+    </form>
+</div>

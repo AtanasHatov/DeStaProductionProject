@@ -126,6 +126,9 @@ namespace DeStaProduction.Infrastucture.Migrations
                     b.Property<Guid>("EventType")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)

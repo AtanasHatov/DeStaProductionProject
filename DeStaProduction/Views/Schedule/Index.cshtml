@@ -13,193 +13,215 @@
     var userId = user.Id;
 }
 
-<h2>График</h2>
+<section class="schedule-page">
 
-@if (User.IsInRole("Admin"))
-{
-     <div class="mb-3"> <a asp-controller="Admin" asp-action="AssignTask" class="btn btn-warning">Добави задача на актьор</a> <a asp-controller="Performance" asp-action="Create" class="btn btn-primary">Добави представление</a> <a asp-controller="Admin" asp-action="MyTask" class="btn btn-dark">Добави задача за мен</a> </div>
-}
+    <h2 class="page-title">График</h2>
 
-<a asp-action="Index" asp-route-month="@(ViewBag.Month == 1 ? 12 : ViewBag.Month - 1)"
-   asp-route-year="@(ViewBag.Month == 1 ? ViewBag.Year - 1 : ViewBag.Year)">←</a>
-
-<h4>@ViewBag.Month / @ViewBag.Year</h4>
-
-<a asp-action="Index" asp-route-month="@(ViewBag.Month == 12 ? 1 : ViewBag.Month + 1)"
-   asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">→</a>
-
-<div class="calendar-grid">
-    <div class="day-header">Пон</div>
-    <div class="day-header">Вт</div>
-    <div class="day-header">Ср</div>
-    <div class="day-header">Чет</div>
-    <div class="day-header">Пет</div>
-    <div class="day-header">Съб</div>
-    <div class="day-header">Нед</div>
-
- 
-    @{
-        var firstDay = new DateTime(ViewBag.Year, ViewBag.Month, 1);
-        int offset = ((int)firstDay.DayOfWeek + 6) % 7;
-    }
-
-    @for (int i = 0; i < offset; i++)
+    @if (User.IsInRole("Admin"))
     {
-        <div></div>
-    }
-
-    @for (int day = 1; day <= DateTime.DaysInMonth(year, month); day++)
-    {
-        var date = new DateTime(year, month, day);
-        var daySchedules = Model.Where(x => x.Date.Date == date.Date);
-
-        <div class="day">
-            <div class="day-number">@day</div>
-
-            @if (User.IsInRole("Artist"))
-            {
-                var availability = Model.FirstOrDefault(x =>
-                x.Date.Date == date.Date &&
-                x.UserId == userId &&
-                x.Type == "Availability"
-                );
-
-                var bg = availability == null
-                ? "bg-light"
-                : availability.IsAvailable ? "bg-success" : "bg-danger";
-
-                <div class="@bg p-1 mb-1 text-center rounded">
-                    <form asp-controller="User" asp-action="Availability" method="post">
-                        <input type="hidden" name="date" value="@date" />
-                        <button name="isAvailable" value="true" class="btn btn-success btn-sm">✔</button>
-                        <button name="isAvailable" value="false" class="btn btn-danger btn-sm">✖</button>
-                    </form>
-                </div>
-            }
-
-            @if (User.IsInRole("User"))
-            {
-                var grouped = daySchedules
-                .Where(x => x.Type == "Performance")
-                .GroupBy(x => x.PerformanceId);
-
-                foreach (var g in grouped)
-                {
-                    var first = g.First();
-
-                    <div class="event-card bg-primary text-white"
-                         data-bs-toggle="modal"
-                         data-bs-target="#modal"
-                         data-title="@first.PerformanceTitle"
-                         data-actors="@string.Join(", ", g.Select(x => x.FirstName + " " + x.LastName))"
-                         data-desc="@first.Notes"
-                         data-time="@first.Date.ToString("HH:mm")"
-                         data-location="@first.LocationName">
-                        🎭 @first.PerformanceTitle
-                    </div>
-                }
-            }
-            else if (User.IsInRole("Artist"))
-            {
-                foreach (var s in daySchedules
-                .Where(x => x.UserId == userId && x.Type != "Availability"))
-                {
-                    <div class="event-card bg-warning"
-                         data-bs-toggle="modal"
-                         data-bs-target="#modal"
-                         data-title="@s.PerformanceTitle"
-                         data-actors=""
-                         data-desc="@s.Notes"
-                         data-time="@s.Date.ToString("HH:mm")"
-                         data-location="@s.LocationName">
-                        🎬 @s.Type
-                    </div>
-                }
-            }
-            else if (User.IsInRole("Admin"))
-            {
-                foreach (var s in daySchedules.Where(x => x.Type != "Availability"))
-                {
-                    <div class="event-card bg-dark text-white"
-                         data-bs-toggle="modal"
-                         data-bs-target="#modal"
-                         data-title="@s.PerformanceTitle"
-                         data-actors=@($"{@s.FirstName} {s.LastName}")
-                         data-desc="@s.Notes"
-                         data-time="@s.Date.ToString("HH:mm")"
-                         data-location="@s.LocationName">
-                        👤 @($"{s.FirstName} {s.LastName}")
-                    </div>
-                }
-            }
+        <div class="mb-3 text-center">
+            <a asp-controller="Admin" asp-action="AssignTask" class="btn btn-warning">Добави задача на актьор</a>
+            <a asp-controller="Performance" asp-action="Create" class="btn btn-primary">Добави представление</a>
+            <a asp-controller="Admin" asp-action="MyTask" class="btn btn-dark">Добави задача за мен</a>
         </div>
     }
-    
 
-</div>
+    <div class="schedule-header">
 
-<div class="modal fade" id="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content p-3">
-            <h5 id="title"></h5>
-            <p id="actors"></p>
-            <p id="desc"></p>
+        <a asp-action="Index" asp-route-month="@(ViewBag.Month == 1 ? 12 : ViewBag.Month - 1)"
+           asp-route-year="@(ViewBag.Month == 1 ? ViewBag.Year - 1 : ViewBag.Year)">⬅</a>
+
+        <h4>@ViewBag.Month / @ViewBag.Year</h4>
+
+        <a asp-action="Index" asp-route-month="@(ViewBag.Month == 12 ? 1 : ViewBag.Month + 1)"
+           asp-route-year="@(ViewBag.Month == 12 ? ViewBag.Year + 1 : ViewBag.Year)">➡</a>
+
+    </div>
+
+    <div class="calendar-grid">
+        <div class="day-header">Пон</div>
+        <div class="day-header">Вт</div>
+        <div class="day-header">Ср</div>
+        <div class="day-header">Чет</div>
+        <div class="day-header">Пет</div>
+        <div class="day-header">Съб</div>
+        <div class="day-header">Нед</div>
+
+        @{
+            var firstDay = new DateTime(ViewBag.Year, ViewBag.Month, 1);
+            int offset = ((int)firstDay.DayOfWeek + 6) % 7;
+        }
+
+        @for (int i = 0; i < offset; i++)
+        {
+            <div></div>
+        }
+
+        @for (int day = 1; day <= DateTime.DaysInMonth(year, month); day++)
+        {
+            var date = new DateTime(year, month, day);
+            var daySchedules = Model.Where(x => x.Date.Date == date.Date);
+
+            <div class="day">
+                <div class="day-number">@day</div>
+
+                @if (User.IsInRole("Artist"))
+                {
+                    var availability = Model.FirstOrDefault(x =>
+                    x.Date.Date == date.Date &&
+                    x.UserId == userId &&
+                    x.Type == "Availability"
+                    );
+
+                    var bg = availability == null
+                    ? "bg-light"
+                    : availability.IsAvailable ? "bg-success" : "bg-danger";
+
+                    <div class="availability-box @bg">
+                        <form asp-controller="User" asp-action="Availability" method="post">
+                            <input type="hidden" name="date" value="@date" />
+                            <button name="isAvailable" value="true" class="btn btn-success btn-sm">✔</button>
+                            <button name="isAvailable" value="false" class="btn btn-danger btn-sm">✖</button>
+                        </form>
+                    </div>
+                }
+
+                @if (User.IsInRole("User"))
+                {
+                    var grouped = daySchedules
+                    .Where(x => x.Type == "Performance")
+                    .GroupBy(x => x.PerformanceId);
+
+                    foreach (var g in grouped)
+                    {
+                        var first = g.First();
+
+                        <div class="event-card bg-primary text-white"
+                             data-bs-toggle="modal"
+                             data-bs-target="#modal"
+                             data-title="@first.PerformanceTitle"
+                             data-actors="@string.Join(", ", g.Select(x => x.FirstName + " " + x.LastName))"
+                             data-desc="@first.Notes"
+                             data-time="@first.Date.ToString("HH:mm")"
+                             data-location="@first.LocationName">
+                            🎭 @first.PerformanceTitle
+                        </div>
+                    }
+                }
+                else if (User.IsInRole("Artist"))
+{
+    foreach (var s in daySchedules
+        .Where(x => x.UserId == userId && x.Type != "Availability"))
+    {
+        
+            string typeBg = s.Type switch
+            {
+                "Performance" => "🎭 Представление",
+                "Rehearsal" => "🎬 Репетиция",
+                "Setup" => "🛠️ Редене на сцена",
+                "Task" => "📋 Задача",
+                _ => s.Type
+            };
+        
+
+        <div class="event-card bg-warning"
+             data-bs-toggle="modal"
+             data-bs-target="#modal"
+             data-title="@s.PerformanceTitle"
+             data-actors=""
+             data-desc="@s.Notes"
+             data-time="@s.Date.ToString("HH:mm")"
+             data-location="@s.LocationName">
+
+            @typeBg
+        </div>
+    }
+}
+                else if (User.IsInRole("Admin"))
+                {
+                    foreach (var s in daySchedules.Where(x => x.Type != "Availability"))
+                    {
+                        <div class="event-card bg-dark text-white"
+                             data-bs-toggle="modal"
+                             data-bs-target="#modal"
+                             data-title="@s.PerformanceTitle"
+                             data-actors=@($"{@s.FirstName} {s.LastName}")
+                             data-desc="@s.Notes"
+                             data-time="@s.Date.ToString("HH:mm")"
+                             data-location="@s.LocationName">
+                            👤 @($"{s.FirstName} {s.LastName}")
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    <div class="modal fade" id="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-3 position-relative">
+
+                <button type="button" class="custom-close" data-bs-dismiss="modal">
+                    ✕
+                </button>
+
+                <h5 id="title"></h5>
+                <p id="actors"></p>
+                <p id="desc"></p>
+
+            </div>
         </div>
     </div>
-</div>
+
+</section>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
         const modal = document.getElementById("modal");
 
-        if (!modal) return; 
+        if (!modal) return;
 
         modal.addEventListener("show.bs.modal", function (event) {
 
             const button = event.relatedTarget;
 
-            if (!button) return; 
+            if (!button) return;
 
+          
             const title = button.getAttribute("data-title") || "";
             const actors = button.getAttribute("data-actors") || "";
             const desc = button.getAttribute("data-desc") || "";
             const time = button.getAttribute("data-time") || "";
             const location = button.getAttribute("data-location") || "";
 
-            const isAdmin = '@User.IsInRole("Admin")' === 'True';
-            const isArtist = '@User.IsInRole("Artist")' === 'True';
-
             const titleEl = document.getElementById("title");
             const actorsEl = document.getElementById("actors");
             const descEl = document.getElementById("desc");
 
-            if (!titleEl || !actorsEl || !descEl) return; 
+            if (!titleEl || !actorsEl || !descEl) return;
 
-            if (isAdmin) {
-                actorsEl.innerHTML =
-                    "🎭 <strong>" + (title) + "</strong>";
 
                 titleEl.innerHTML =
-                    "👥 <strong>Актьор:</strong><br>" + (actors || "Няма информация");
-            }
-            else {
-                titleEl.innerHTML =
-                    "🎭 <strong>" + (title || "Без заглавие") + "</strong>";
+        "🎭 " + (title || "Без заглавие");
 
-                let actorsText = actors;
+        const isArtist = '@User.IsInRole("Artist")' === 'True';
 
-                if (isArtist && (!actors || actors.trim() === "")) {
-                    actorsText = "АЗ";
-                }
+    let actorsText = actors;
 
-                actorsEl.innerHTML =
-                    "👥 <strong>Актьори:</strong><br>" + (actorsText || "Няма информация");
-            }
+    if (isArtist && (!actors || actors.trim() === "")) {
+        actorsText = "АЗ";
+    }
 
-            descEl.innerHTML =
-                "📝 <strong>Описание:</strong><br>" + (desc || "Няма описание") + "<br><br>" +
-                "⏰ <strong>Час:</strong> " + (time || "няма") + "<br>" +
-                "🏛️ <strong>Локация:</strong> " + (location || "няма");
+    actorsEl.innerHTML =
+        "<strong>👥 Актьори:</strong><br>" +
+        (actorsText || "Няма информация");
+
+    descEl.innerHTML =
+        "<strong>📝 Описание:</strong><br>" + (desc || "Няма описание") + "<br><br>" +
+        "⏰ <strong>Час:</strong> " + (time || "няма") + "<br>" +
+        "🏛️ <strong>Локация:</strong> " + (location || "няма");
         });
+
     });
 </script>

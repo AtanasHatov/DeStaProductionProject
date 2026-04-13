@@ -1,36 +1,52 @@
-﻿@using DeStaProduction.ViewModels
-@model IEnumerable<EventViewModel>
+﻿@model IEnumerable<DeStaProduction.ViewModels.EventViewModel>
 
-<h2>Репертоар</h2>
+<div class="repertoire-container">
 
-<a asp-action="Create" class="btn btn-primary mb-2">Създай Заглавие</a>
+    <h1 class="repertoire-title">🎭 Репертоар</h1>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="text-center mb-4">
+            <a asp-action="Create" class="btn theater-btn">
+                ➕ Добави представление
+            </a>
+        </div>
+    }
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Заглавие</th>
-            <th>Категория</th>
-            <th>Времетраене (мин)</th>
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var e in Model)
+    <div class="repertoire-grid">
+
+        @foreach (var item in Model)
         {
-            <tr>
-                <td>@e.Title</td>
-                <td>@e.TypeName</td>
-                <td>@e.Duration</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@e.Id" class="btn btn-info btn-sm">
-                        Детайли
-                    </a>
-                    <form asp-action="Delete" asp-route-id="@e.Id" method="post" style="display:inline">
-                        <button class="btn btn-danger btn-sm">Изтрий</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <div class="repertoire-card">
 
+            
+                <div class="card-image">
+                    <img src="@(string.IsNullOrEmpty(item.ImagePath)
+    ? "/images/default-poster.jpg"
+    : item.ImagePath)" />
+                </div>
+
+              
+                <div class="card-content">
+
+                    <h3>@item.Title</h3>
+
+                    <p class="type">@item.TypeName</p>
+
+                    <p class="desc">
+                        @(item.Description?.Length > 100
+                            ? item.Description.Substring(0, 100) + "..."
+                            : item.Description)
+                    </p>
+
+                    <p class="duration">⏱ @item.Duration мин</p>
+
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn details-btn">
+                        🎟️ Детайли
+                    </a>
+
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

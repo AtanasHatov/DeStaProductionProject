@@ -26,5 +26,7 @@ namespace DeStaProduction.ViewModels
         [Required]
         [MaxLength(1000)]
         public string Description { get; set; } = null!;
+        public IFormFile? ImageFile { get; set; }
+        public string? ImagePath { get; set; }
     }
 }
