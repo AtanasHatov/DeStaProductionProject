@@ -9,6 +9,5 @@ public class EventDto
     public int Duration { get; set; }
     public string TypeName { get; set; } = null!;
     public string? ImagePath { get; set; }
-  
     public List<PerformanceShortDto> Performances { get; set; } = new();
 }

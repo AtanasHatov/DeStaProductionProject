@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260413225917_InitDS")]
+    [Migration("20260415222516_InitDS")]
     partial class InitDS
     {
         /// <inheritdoc />

@@ -1,20 +1,26 @@
 ﻿using DeStaProduction.Core.Contracts;
 using DeStaProduction.Core.DTOs;
+using DeStaProduction.Core.Services;
 using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 [Authorize(Roles = "Admin")]
 public class EventController : Controller
 {
     private readonly IEventService eventService;
     private readonly IEventTypeService eventTypeService;
+    private readonly IImageService imageService;
 
-    public EventController(IEventService _eventService, IEventTypeService _eventTypeService)
+    public EventController(IEventService eventService,
+                       IEventTypeService eventTypeService,
+                       IImageService imageService)
     {
-        eventService = _eventService;
-        eventTypeService = _eventTypeService;
+        this.eventService = eventService;
+        this.eventTypeService = eventTypeService;
+        this.imageService = imageService;
     }
 
     public async Task<IActionResult> Index()
@@ -27,7 +33,8 @@ public class EventController : Controller
             Title = e.Title,
             Description = e.Description,
             Duration = e.Duration,
-            TypeName = e.TypeName
+            TypeName = e.TypeName,
+            ImagePath=e.ImagePath
         });
 
         return View(model);
@@ -50,8 +57,6 @@ public class EventController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(EventViewModel model)
     {
-        if (!ModelState.IsValid)
-            return View(model);
 
         if (!ModelState.IsValid)
         {
@@ -66,17 +71,13 @@ public class EventController : Controller
 
             return View(model);
         }
+        string imageUrl = null;
+
         if (model.ImageFile != null)
         {
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ImageFile.FileName);
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await model.ImageFile.CopyToAsync(stream);
-            }
-
-            model.ImagePath = "/images/" + fileName;
+            imageUrl = await imageService.UploadImageAsync(
+                model.ImageFile,
+                model.ImageFile.FileName);
         }
 
         await eventService.AddAsync(new AddEventDto
@@ -85,9 +86,8 @@ public class EventController : Controller
             Description = model.Description,
             Duration = model.Duration,
             EventTypeId = model.EventType,
-            ImagePath = model.ImagePath
+            ImagePath = imageUrl
         });
-
         return RedirectToAction(nameof(Index));
     }
 
@@ -112,7 +112,8 @@ public class EventController : Controller
             Description = item.Description,
             Duration = item.Duration,
             TypeName = item.TypeName,
-            Performances = item.Performances
+            Performances = item.Performances,
+            ImagePath = item.ImagePath
         };
 
         return View(model);

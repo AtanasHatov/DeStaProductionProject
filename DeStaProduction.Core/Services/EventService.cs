@@ -65,7 +65,7 @@ public class EventService : IEventService
                 Description = e.Description,
                 Duration = e.Duration,
                 TypeName = e.Type.Name,
-
+                ImagePath = e.ImagePath,
                 Performances = e.Performances
     .Select(p => new PerformanceShortDto
     {

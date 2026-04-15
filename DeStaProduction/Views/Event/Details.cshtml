@@ -1,13 +1,16 @@
 ﻿@model DeStaProduction.ViewModels.EventViewModel
 
-<div class="details-container">
+<div class="event-details-page">
 
     <div class="details-card">
 
-        <img src="@(string.IsNullOrEmpty(Model.ImagePath)
-            ? "/images/default-poster.jpg"
-            : Model.ImagePath)"
-             class="details-image" />
+        <div class="details-image-wrapper">
+            <img src="@(string.IsNullOrWhiteSpace(Model.ImagePath)
+        ? "/images/default-poster.jpg"
+        : Model.ImagePath)"
+                 alt="@Model.Title"
+                 class="details-image" />
+        </div>
 
         <div class="details-content">
 
@@ -23,12 +26,19 @@
 
             <h3>🎭 Предстоящи представления</h3>
 
-            @foreach (var p in Model.Performances)
+            @if (Model.Performances != null && Model.Performances.Any())
             {
-                <div class="performance-item">
-                    📅 @p.Date.ToString("dd MMM yyyy HH:mm")
-                    📍 @p.Location
-                </div>
+                foreach (var p in Model.Performances)
+                {
+                    <div class="performance-item">
+                        📅 @p.Date.ToString("dd MMM yyyy HH:mm")
+                        📍 @p.Location
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Няма предстоящи представления</p>
             }
 
         </div>

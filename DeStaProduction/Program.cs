@@ -4,9 +4,24 @@ using Microsoft.AspNetCore.Identity;
 using DeStaProduction.Seed;
 using DeStaProduction.Core.Contracts;
 using DeStaProduction.Core.Services;
+using DeStaProduction.Infrastucture.Claudinary;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<IImageService, ImageService>();
+
+var cloudinarySettings = builder.Configuration
+    .GetSection("CloudinarySettings")
+    .Get<CloudinarySettings>();
+
+builder.Services.AddSingleton<Cloudinary>(sp =>
+{
+    return new Cloudinary(new Account(
+        cloudinarySettings.CloudName,
+        cloudinarySettings.ApiKey,
+        cloudinarySettings.ApiSecret));
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

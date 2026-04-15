@@ -18,11 +18,12 @@
         {
             <div class="repertoire-card">
 
-            
+
                 <div class="card-image">
-                    <img src="@(string.IsNullOrEmpty(item.ImagePath)
-    ? "/images/default-poster.jpg"
-    : item.ImagePath)" />
+                    <img src="@(string.IsNullOrWhiteSpace(item.ImagePath)
+        ? "/images/default-poster.jpg"
+        : item.ImagePath)"
+                         alt="@item.Title" />
                 </div>
 
               
