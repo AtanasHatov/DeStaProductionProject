@@ -28,7 +28,9 @@
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn-details">
                         Детайли
                     </a>
-
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-edit">
+                        ✏️ Редактирай
+                    </a>
                     <form asp-action="Delete" method="get">
                         <input type="hidden" name="id" value="@item.Id" />
                         <button class="btn-delete">Изтрий</button>

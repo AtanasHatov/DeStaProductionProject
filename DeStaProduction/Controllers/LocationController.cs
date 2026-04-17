@@ -97,5 +97,36 @@ namespace DeStaProduction.Controllers
 
             return View(model);
         }
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var location = await locationService.GetByIdAsync(id);
+
+            if (location == null)
+                return NotFound();
+
+            var model = new LocationViewModel
+            {
+                Id = location.Id,
+                Name = location.Name,
+                Address = location.Address
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(LocationViewModel model)
+        {
+
+            await locationService.UpdateAsync(new LocationDto
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Address = model.Address
+            });
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

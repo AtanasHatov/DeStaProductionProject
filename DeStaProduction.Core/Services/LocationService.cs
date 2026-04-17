@@ -47,5 +47,31 @@ namespace DeStaProduction.Core.Services
                 await context.SaveChangesAsync();
             }
         }
+
+        public async Task<LocationDto?> GetByIdAsync(Guid id)
+        {
+            return await context.Locations
+                .Where(x => x.Id == id)
+                .Select(x => new LocationDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Address = x.Address
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateAsync(LocationDto dto)
+        {
+            var location = await context.Locations.FindAsync(dto.Id);
+
+            if (location == null)
+                return;
+
+            location.Name = dto.Name;
+            location.Address = dto.Address;
+
+            await context.SaveChangesAsync();
+        }
     }
 }

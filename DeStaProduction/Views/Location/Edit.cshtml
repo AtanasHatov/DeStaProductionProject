@@ -1,0 +1,25 @@
+﻿@model DeStaProduction.ViewModels.LocationViewModel
+
+<div class="create-container">
+    <h1 class="create-title">✏️ Редактирай локация</h1>
+
+    <form asp-action="Edit" method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label>Име</label>
+            <input asp-for="Name" class="form-control theater-input" />
+        </div>
+
+        <div class="form-group">
+            <label>Адрес</label>
+            <input asp-for="Address" class="form-control theater-input" />
+        </div>
+
+        <button type="submit" class="theater-btn">
+            💾 Запази
+        </button>
+
+    </form>
+</div>

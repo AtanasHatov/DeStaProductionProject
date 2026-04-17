@@ -8,5 +8,7 @@ namespace DeStaProduction.Core.Contracts
         Task<IEnumerable<LocationDto>> GetAllAsync();
         Task AddAsync(LocationDto model);
         Task DeleteAsync(Guid id);
+        Task<LocationDto?> GetByIdAsync(Guid id);
+        Task UpdateAsync(LocationDto dto);
     }
 }
