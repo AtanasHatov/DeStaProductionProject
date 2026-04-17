@@ -1,0 +1,48 @@
+﻿@model DeStaProduction.ViewModels.PerformanceFilterViewModel
+<div class="filter-container">
+
+    <form method="get" class="filter-form">
+
+        <input type="date" asp-for="Date" class="filter-input" />
+
+        <select asp-for="LocationId" class="filter-input">
+            <option value="">📍 Всички локации</option>
+            @foreach (var l in Model.Locations)
+            {
+                <option value="@l.Id">@l.Name</option>
+            }
+        </select>
+
+        <select asp-for="EventTypeId" class="filter-input">
+            <option value="">🎭 Всички типове</option>
+            @foreach (var t in Model.EventTypes)
+            {
+                <option value="@t.Id">@t.Name</option>
+            }
+        </select>
+
+        <button type="submit" class="filter-btn">
+            🔍 Филтрирай
+        </button>
+
+    </form>
+</div>
+<div class="results-container">
+
+    @if (Model.Performances == null || !Model.Performances.Any())
+    {
+        <p class="no-results">❌ Няма намерени представления</p>
+    }
+    else
+    {
+        @foreach (var p in Model.Performances)
+        {
+            <div class="performance-card">
+                <h3>@p.Title</h3>
+                <p>📅 @p.Date.ToString("dd MMM yyyy HH:mm")</p>
+                <p>📍 @p.Location</p>
+            </div>
+        }
+    }
+
+</div>

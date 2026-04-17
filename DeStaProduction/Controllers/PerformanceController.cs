@@ -1,5 +1,6 @@
 ﻿using DeStaProduction.Core.Contracts;
 using DeStaProduction.Core.DTOs;
+using DeStaProduction.Core.Services;
 using DeStaProduction.Infrastucture.Entities;
 using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -12,12 +13,16 @@ public class PerformanceController : Controller
     private readonly IPerformanceService performanceService;
     private readonly IEventService eventService;
     private readonly ILocationService locationService;
+    private readonly IEventTypeService eventTypeService;
 
-    public PerformanceController(IPerformanceService _performanceService,IEventService _eventService,ILocationService _locationService)
+    public PerformanceController(
+    IPerformanceService performanceService,
+    ILocationService locationService,
+    IEventTypeService eventTypeService)
     {
-        performanceService = _performanceService;
-        eventService = _eventService;
-        locationService = _locationService;
+        this.performanceService = performanceService;
+        this.locationService = locationService;
+        this.eventTypeService = eventTypeService;
     }
 
     public async Task<IActionResult> Index()
@@ -103,5 +108,18 @@ public class PerformanceController : Controller
     {
         await performanceService.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Filter(PerformanceFilterViewModel model)
+    {
+        model.Performances = await performanceService.GetFilteredAsync(
+            model.Date,
+            model.LocationId,
+            model.EventTypeId);
+
+        model.Locations = (await locationService.GetAllAsync()).ToList();
+        model.EventTypes = (await eventTypeService.GetAllAsync()).ToList();
+
+        return View(model);
     }
 }

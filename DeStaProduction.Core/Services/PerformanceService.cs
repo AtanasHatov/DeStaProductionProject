@@ -8,7 +8,7 @@ namespace DeStaProduction.Core.Services
     public class PerformanceService : IPerformanceService
     {
         private readonly ApplicationDbContext context;
-
+        
         public PerformanceService(ApplicationDbContext _context)
         {
             context = _context;
@@ -58,5 +58,41 @@ namespace DeStaProduction.Core.Services
                 await context.SaveChangesAsync();
             }
         }
+        public async Task<List<PerformanceShortDto>> GetFilteredAsync(
+    DateTime? date,
+    Guid? locationId,
+    Guid? eventTypeId)
+        {
+            var query = context.Performances
+                .Include(p => p.Location)
+                .Include(p => p.Event)
+                .ThenInclude(e => e.Type)
+                .AsQueryable();
+
+            if (date.HasValue)
+            {
+                query = query.Where(p => p.Date.Date == date.Value.Date);
+            }
+
+            if (locationId.HasValue)
+            {
+                query = query.Where(p => p.LocationId == locationId);
+            }
+
+            if (eventTypeId.HasValue)
+            {
+                query = query.Where(p => p.Event.EventType == eventTypeId);
+            }
+
+            return await query
+                .Select(p => new PerformanceShortDto
+                {
+                    Title = p.Event.Title,
+                    Date = p.Date,
+                    Location = p.Location.Name
+                })
+                .ToListAsync();
+        }
+
     }
 }

@@ -12,5 +12,9 @@ namespace DeStaProduction.Core.Contracts
         Task<IEnumerable<PerformanceDto>> GetAllAsync();
         Task AddAsync(PerformanceDto model);
         Task DeleteAsync(Guid id);
+        Task<List<PerformanceShortDto>> GetFilteredAsync(
+    DateTime? date,
+    Guid? locationId,
+    Guid? eventTypeId);
     }
 }
