@@ -23,6 +23,7 @@ public class EventController : Controller
         this.imageService = imageService;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var data = await eventService.GetAllAsync();
@@ -98,6 +99,7 @@ public class EventController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Details(Guid id)
 {
         var item = await eventService.GetByIdAsync(id);

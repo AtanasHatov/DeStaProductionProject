@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260415222516_InitDS")]
-    partial class InitDS
+    [Migration("20260418172632_InitialMigration3")]
+    partial class InitialMigration3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -426,6 +426,33 @@ namespace DeStaProduction.Infrastucture.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TicketRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("PerformanceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PerformanceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TicketRequests");
+                });
+
             modelBuilder.Entity("DeStaProduction.Infrastucture.Entities.Event", b =>
                 {
                     b.HasOne("DeStaProduction.Infrastucture.Entities.EventType", "Type")
@@ -553,6 +580,25 @@ namespace DeStaProduction.Infrastucture.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TicketRequest", b =>
+                {
+                    b.HasOne("DeStaProduction.Infrastucture.Entities.Performance", "Performance")
+                        .WithMany()
+                        .HasForeignKey("PerformanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DeStaProduction.Infrastucture.Entities.DeStaUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Performance");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DeStaProduction.Infrastucture.Entities.DeStaUser", b =>

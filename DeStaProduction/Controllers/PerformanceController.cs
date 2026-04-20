@@ -6,6 +6,7 @@ using DeStaProduction.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 [Authorize]
 public class PerformanceController : Controller
@@ -14,15 +15,19 @@ public class PerformanceController : Controller
     private readonly IEventService eventService;
     private readonly ILocationService locationService;
     private readonly IEventTypeService eventTypeService;
-
+    private readonly ITicketService ticketService;
     public PerformanceController(
     IPerformanceService performanceService,
+    IEventService eventService,
     ILocationService locationService,
-    IEventTypeService eventTypeService)
+    IEventTypeService eventTypeService,
+    ITicketService ticketService)
     {
         this.performanceService = performanceService;
         this.locationService = locationService;
         this.eventTypeService = eventTypeService;
+        this.ticketService = ticketService;
+        this.eventService = eventService;
     }
 
     public async Task<IActionResult> Index()
@@ -65,8 +70,6 @@ public class PerformanceController : Controller
         return View();
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(PerformanceViewModel model)
@@ -121,5 +124,57 @@ public class PerformanceController : Controller
         model.EventTypes = (await eventTypeService.GetAllAsync()).ToList();
 
         return View(model);
+    }
+
+    public IActionResult Reserve(Guid id)
+    {
+        return View(new TicketReserveViewModel
+        {
+            PerformanceId = id
+        });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Reserve(TicketReserveViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        await ticketService.CreateAsync(model.PerformanceId, userId, model.Count);
+
+        return View("Success");
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult Tickets()
+    {
+        var tickets = ticketService.GetAll().Select(t => new TicketAdminViewModel()
+        {
+            Count = t.Count,
+            FullName = t.FullName,
+            Id = t.Id,
+            PerformanceTitle = t.PerformanceTitle,
+            Status = t.Status
+        });
+
+        return View(tickets);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> Approve(Guid id)
+    {
+        await ticketService.Approve(id);
+        return RedirectToAction("Tickets");
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> Reject(Guid id)
+    {
+        await ticketService.Reject(id);
+        return RedirectToAction("Tickets");
     }
 }

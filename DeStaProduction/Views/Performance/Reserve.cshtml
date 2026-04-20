@@ -1,0 +1,13 @@
+﻿@model TicketReserveViewModel
+
+<div class="ticket-container">
+    <h2 class="ticket-title">🎟️ Резервация</h2>
+
+    <form asp-action="Reserve" method="post">
+        <input type="hidden" asp-for="PerformanceId" />
+
+        <input asp-for="Count" class="ticket-input" type="number" />
+
+        <button class="ticket-btn">Запази</button>
+    </form>
+</div>

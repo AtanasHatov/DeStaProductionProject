@@ -1717,3 +1717,195 @@ footer{
 .performance-card:nth-child(5) {
     animation-delay: 0.5s;
 }
+
+/* 🎟️ RESERVE / SUCCESS контейнер */
+.ticket-container {
+    max-width: 500px;
+    margin: 140px auto 100px auto;
+    padding: 30px;
+    background: rgba(20,20,20,0.95);
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.7);
+    text-align: center;
+}
+
+/* заглавие */
+.ticket-title {
+    color: gold;
+    margin-bottom: 20px;
+}
+
+/* input */
+.ticket-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    background: #111;
+    color: white;
+    margin-bottom: 15px;
+}
+
+    .ticket-input:focus {
+        border-color: gold;
+        box-shadow: 0 0 10px rgba(255,215,0,0.3);
+    }
+
+/* бутон */
+.ticket-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    background: gold;
+    color: black;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+    .ticket-btn:hover {
+        background: #e6c200;
+        transform: scale(1.05);
+        box-shadow: 0 0 15px gold;
+    }
+
+/* 🎭 ADMIN CARDS */
+.ticket-card {
+    background: linear-gradient(145deg, #111, #1c1c1c);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    transition: 0.3s;
+    position: relative;
+}
+
+    .ticket-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 0 25px rgba(255,215,0,0.3);
+    }
+
+/* име */
+.ticket-name {
+    color: gold;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* текст */
+.ticket-info {
+    color: #bbb;
+    font-size: 14px;
+}
+
+/* статус */
+.ticket-status {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+/* статуси */
+.status-pending {
+    background: #f39c12;
+    color: black;
+}
+
+.status-approved {
+    background: gold;
+    color: black;
+}
+
+.status-rejected {
+    background: #ff4d4d;
+    color: white;
+}
+
+/* бутони */
+.ticket-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-approve {
+    flex: 1;
+    background: gold;
+    border: none;
+    padding: 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-reject {
+    flex: 1;
+    background: #ff4d4d;
+    border: none;
+    padding: 8px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+/* SUCCESS текст */
+.ticket-success-text {
+    color: #ccc;
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.ticket-action {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.btn-ticket {
+    display: inline-block;
+    padding: 8px 18px;
+    background: gold;
+    color: black;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+    .btn-ticket:hover {
+        background: #e6c200;
+        transform: scale(1.08);
+        box-shadow: 0 0 12px gold;
+    }
+
+/* dropdown container */
+.admin-dropdown {
+    position: relative;
+}
+
+/* dropdown меню */
+.custom-dropdown {
+    background: rgba(20,20,20,0.95);
+    border-radius: 12px;
+    border: 1px solid rgba(255,215,0,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    padding: 10px 0;
+}
+
+    /* items */
+    .custom-dropdown .dropdown-item {
+        color: #ddd;
+        padding: 10px 20px;
+        transition: 0.3s;
+    }
+
+        /* hover */
+        .custom-dropdown .dropdown-item:hover {
+            background: gold;
+            color: black;
+        }
+
+/* toggle hover */
+.admin-dropdown .nav-link:hover {
+    color: gold !important;
+}

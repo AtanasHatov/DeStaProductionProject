@@ -132,42 +132,6 @@ namespace DeStaProduction.Seed
                         Console.WriteLine(ex.InnerException?.Message);
                         throw;
                     }
-
-                    if (!context.Schedules.Any())
-                    {
-                        var performances = context.Performances.Take(3).ToList();
-
-                        context.Schedules.AddRange(
-                            new Schedule
-                            {
-                                PerformanceId = performances[0].Id,
-                                Date = new DateTime(2026, 6, 15, 18, 0, 0),
-                                Notes = "!!!!ПРЕМИЕРА!!!!"
-                            },
-                            new Schedule
-                            {
-                                PerformanceId = performances[1].Id,
-                                Date = new DateTime(2026, 6, 15, 20, 0, 0),
-                                Notes = "!!!!ОЧАКВАМЕ ВИ!!!!"
-                            },
-                            new Schedule
-                            {
-                                PerformanceId = performances[2].Id,
-                                Date = new DateTime(2026, 6, 15, 22, 30, 0),
-                                Notes = "!!!!ЗАПОВЯДАЙТЕ!!!!"
-                            }
-                        );
-
-                        try
-                        {
-                            await context.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.InnerException?.Message);
-                            throw;
-                        }
-                    }
                 }
             }
         }
