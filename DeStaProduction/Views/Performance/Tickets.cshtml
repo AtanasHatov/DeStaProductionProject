@@ -1,0 +1,42 @@
+﻿@model IEnumerable<TicketAdminViewModel>
+
+<div class="performances-page">
+
+    <h2 class="page-title">🎟️ Заявки</h2>
+
+    <div class="performances-grid">
+
+        @foreach (var t in Model)
+        {
+            <div class="ticket-card">
+
+                <div class="ticket-name">@t.FullName</div>
+
+                <div class="ticket-info">@t.PerformanceTitle</div>
+                <div class="ticket-info">Билети: @t.Count</div>
+
+                <div class="ticket-status
+        @(t.Status == TicketStatus.Pending ? "status-pending" :
+          t.Status == TicketStatus.Approved ? "status-approved" :
+          "status-rejected")">
+                    @t.Status
+                </div>
+
+                <div class="ticket-actions">
+                    <form asp-action="Approve" method="post">
+                        <input type="hidden" name="id" value="@t.Id" />
+                        <button class="btn-approve">✔</button>
+                    </form>
+
+                    <form asp-action="Reject" method="post">
+                        <input type="hidden" name="id" value="@t.Id" />
+                        <button class="btn-reject">✖</button>
+                    </form>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

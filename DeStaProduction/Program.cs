@@ -50,7 +50,7 @@ builder.Services.AddScoped<IEventTypeService, EventTypeService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IPerformanceService, PerformanceService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
-
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 var app = builder.Build();
 

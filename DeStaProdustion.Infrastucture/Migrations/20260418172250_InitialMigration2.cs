@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DeStaProduction.Infrastucture.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDS : Migration
+    public partial class InitialMigration2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -316,6 +316,34 @@ namespace DeStaProduction.Infrastucture.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TicketRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PerformanceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TicketRequests_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TicketRequests_Performances_PerformanceId",
+                        column: x => x.PerformanceId,
+                        principalTable: "Performances",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -389,6 +417,16 @@ namespace DeStaProduction.Infrastucture.Migrations
                 name: "IX_Schedules_UserId",
                 table: "Schedules",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketRequests_PerformanceId",
+                table: "TicketRequests",
+                column: "PerformanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketRequests_UserId1",
+                table: "TicketRequests",
+                column: "UserId1");
         }
 
         /// <inheritdoc />
@@ -417,6 +455,9 @@ namespace DeStaProduction.Infrastucture.Migrations
 
             migrationBuilder.DropTable(
                 name: "Schedules");
+
+            migrationBuilder.DropTable(
+                name: "TicketRequests");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

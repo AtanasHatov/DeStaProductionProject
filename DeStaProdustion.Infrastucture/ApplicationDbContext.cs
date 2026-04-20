@@ -22,6 +22,7 @@ namespace DeStaProduction.Infrastucture.Entities
         public DbSet<EventType> EventTypes { get; set; }
         public DbSet<Location> Locations { get; set; } 
         public DbSet<Performance> Performances { get; set; } 
-        public DbSet<Schedule> Schedules { get; set; } 
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<TicketRequest> TicketRequests { get; set; }
     }
 }
